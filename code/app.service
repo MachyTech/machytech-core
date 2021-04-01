@@ -1,0 +1,15 @@
+[Unit]
+Description=embedded-service
+After=network.target
+After=network-online.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+User=timo
+EnvironmentFile=/etc/systemd/app.conf
+WorkingDirectory=/usr/bin/
+ExecStart=/usr/bin/app 0.0.0.0 8080
+
+[Install]
