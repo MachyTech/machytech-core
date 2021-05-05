@@ -17,11 +17,11 @@ void create_env(MachyCore::Environment *env){
 int main()
 {
     char *buffer_pointer;
-
     /* creating the environment */
     MachyCore::Environment *env = new MachyCore::Environment ();
     create_env(env);
     env->print();
+    /* initialize the machy util functions */
     MachyCore::MachyGLutils glutils;
     /* creating openGL context */
     MachyCore::Window win;
