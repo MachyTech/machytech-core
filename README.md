@@ -19,7 +19,33 @@ we are using glfw and glmath that you need to install as git submodules.
 git pull --recurse-submodules
 ```
 
+### build image
+
+build the image using the dockerfile. Assuming you have docker and buildx installed. Documentation is very good so check for latest installation instruction on their website. I have installed buildx from their github page, I would advise doing this as well.
+To create a build instance for buildx do the following.
+```
+docker buildx create --name machytech-core-build
+docker buildx create use machytech-core-build
+```
+Now run the docker file as machytech-core-build user
+```
+docker buildx build --platform linux/arm,linux/arm64 -t machytech/armv7-build . --push
+```
+This builds an armv7 and arm64 image and pushes it to machytech's docker hub.  
+You can check the names of the created images here
+```
+docker buildx imagetools inspect machytech/armv7-build
+```
+Now copy the name from the armv7 image and run the container with a bash instance. Also mount the source code.
+```
+docker run -it --mount type=bind,source=<path-to-source>,target=/home <name> /bin/bash
+```
+
 ## new features
+* ARMv7 build image (05/05/2021)
+
+docker build image ARMv7 with debian and depencies pre-installed
+
 * filemanagement
 
 Reading a csv file and store in the correct format for openGL.
@@ -48,6 +74,9 @@ PORT_ADDR #port
 
 ## Future work
 
+* Simulation mode environment variable
+* Simulation: direct to trajectory file used for simulation
+* Default scene on boot beaglebone
 * Creating extra scenes
 * Read odometry data from sensors
 * Netwerk device driver(?)
@@ -64,3 +93,7 @@ Learn socket programming in C and write secure and optimized network code.
 Usefull to get some context of graphics and the GPU. Very advanced.
 
 * The C++ programming language: Bjarne Stroustrump
+
+libcurl development
+
+* https://curl.se/dev/

@@ -43,12 +43,11 @@ find_package( CURL REQUIRED )
 
 # link libraries
 ADD_LIBRARY(LibsModule ${SOURCES})
-target_link_libraries(LibsModule -lglfw3)
 target_link_libraries(LibsModule -lX11)
 target_link_libraries(LibsModule -lpthread)
 target_link_libraries(LibsModule -lXrandr)
 target_link_libraries(LibsModule -ljson-c)
-target_link_libraries(LibsModule CURL::libcurl)
+target_link_libraries(LibsModule -lcurl)
 target_link_libraries(LibsModule glfw)
 
 # create executable
