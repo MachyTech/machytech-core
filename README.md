@@ -16,11 +16,14 @@ cmake ../ && make -j4
 ### git submodules
 we are using glfw and glmath that you need to install as git submodules.
 ```
-git pull --recurse-submodules
+git submodule update --init
 ```
 
 ### build image
-
+If you dont want to build the docker image yourself you can pull from our machytech docker hub account.
+```
+docker run -it --mount type=bind,source=<path-to-source>,target=/home docker.io/machytech/armv7-build@sha256:f4f929ea0a0c451e0407b63fc2949cda6f3d335fc73c5068df483788b97f85f8 /bin/bash
+```
 build the image using the dockerfile. Assuming you have docker and buildx installed. Documentation is very good so check for latest installation instruction on their website. I have installed buildx from their github page, I would advise doing this as well.
 To create a build instance for buildx do the following.
 ```

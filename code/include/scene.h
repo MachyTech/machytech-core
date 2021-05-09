@@ -61,21 +61,26 @@ namespace MachyCore
         public:
             RobotPathSim (GLuint a) : Scene(a)
             {
-                glCreateVertexArrays(1, &vertex_array_object);
-                glBindVertexArray(vertex_array_object);
+                std::cout<<"creating the scene"<<std::endl;
+                /* only available in OpenGL 4.5 */
+                // glCreateVertexArrays(1, &vertex_array_object);
+                //glBindVertexArray(vertex_array_object);
+                std::cout<<"succesfully binded vertex"<<std::endl;
 
                 rot_location = glGetUniformLocation(program, "ROT");
                 off_location = glGetUniformLocation(program, "OFF");
                 vpos_location = glGetAttribLocation(program, "position");
-
+                std::cout<<"found locations:"<<rot_location<<", "<<off_location<<", "<<vpos_location<<std::endl;
                 glGenBuffers(1, &buffer);
                 glBindBuffer(GL_ARRAY_BUFFER, buffer);
+                std::cout<<"sucessfully binded buffer"<<std::endl;
                 clock_t begin_t = clock();
-                read_remote_csv("http://0.0.0.0:8000/trajectory_100_fpg_out.txt", simdata);
+                read_remote_csv("http://0.0.0.0:5000/trajectory_100_fpg_out.txt", simdata);
                 clock_t end_t = clock();
                 printf("formatted data in : %lf\n\n", double(end_t-begin_t)/double(CLOCKS_PER_SEC));
                 n_points = simdata.size();
                 bind_buffer();
+                std::cout<<"scene generated succesfully"<<std::endl;
             }
             void bind_buffer();
             void render(GLFWwindow* win);

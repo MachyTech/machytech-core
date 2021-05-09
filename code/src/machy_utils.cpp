@@ -37,9 +37,10 @@ namespace MachyCore
 
     GLuint MachyGLutils::link_shader(std::string vs_direction, std::string fs_direction)
     {
+        std::cout<<"linking shaders to program"<<std::endl;
         vertex_shader_text = read_shader(vs_direction);
         vs_text = vertex_shader_text.c_str();
-        std::cout<<"using vertex shader : \n"<<vs_text<<std::endl;
+        std::cout<<"using vertex shader in: \n"<<vs_direction<<std::endl;
         vertex_shader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertex_shader, 1, &vs_text, NULL);
         glCompileShader(vertex_shader);
@@ -53,7 +54,7 @@ namespace MachyCore
         fragment_shader_text = read_shader(fs_direction);
         fs_text = fragment_shader_text.c_str();
 
-        std::cout<<"using the fragment shader : \n"<<fs_text<<std::endl;
+        std::cout<<"using the fragment shader in : \n"<<fs_direction<<std::endl;
 
         fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragment_shader, 1, &fs_text, NULL);
@@ -72,6 +73,7 @@ namespace MachyCore
         glAttachShader(program, fragment_shader);
         glLinkProgram(program);
 
+        std::cout<<"linking succesfull"<<std::endl;
         return program;
     }
 

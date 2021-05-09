@@ -24,7 +24,6 @@ namespace MachyCore
             glfwGetFramebufferSize(win, &width, &height);
             glViewport(0, 0, width, height);
             glUseProgram(program);
-
             
             glm::mat4 trans = glm::mat4(1.0f);
             trans = glm::rotate(trans, -(float)simdata[i].theta, glm::vec3(0.0f, 0.0f, 1.0f));
