@@ -65,8 +65,6 @@ namespace MachyCore
                 /* only available in OpenGL 4.5 */
                 // glCreateVertexArrays(1, &vertex_array_object);
                 //glBindVertexArray(vertex_array_object);
-                std::cout<<"succesfully binded vertex"<<std::endl;
-
                 rot_location = glGetUniformLocation(program, "ROT");
                 off_location = glGetUniformLocation(program, "OFF");
                 vpos_location = glGetAttribLocation(program, "position");
