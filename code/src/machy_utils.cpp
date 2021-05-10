@@ -1,10 +1,8 @@
 #include "machy_utils.h"
 
+
 namespace MachyCore
 {
-    /* callbacks */
-
-
     void Environment::appendVariable(Variables *variable){
         variables->push_back ( variable );
     }
@@ -16,7 +14,7 @@ namespace MachyCore
         for (it = variables->begin (); it < variables->end (); it++)
         {
             std::string str = (*it)->get_var();
-            std::cout<<str<<std::endl;
+            (*it)->print();
         }
     }
 

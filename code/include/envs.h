@@ -5,6 +5,18 @@
 #include <string>
 #include <iostream>
 
+#define GLSL_APP_FRAG 0
+#define GLSL_APP_VERT 1
+#define SCENE 2
+#define TCP_IP 3
+#define TCP_PORT 4
+#define HTTP_IP 5
+#define HTTP_PORT 6
+#define HTTP_ROUTE 7
+#define CURL_WEBURL 8
+#define SAMPLE_SIZE 9
+#define LINEWIDTH 10
+
 namespace MachyCore
 {
     class Variables
@@ -22,6 +34,21 @@ namespace MachyCore
             virtual ~Variables() {};
     };
 
+    class StdEnvVariable : public Variables
+    {
+        public:
+            StdEnvVariable( const char* a, const char* b) : Variables( a,b ) {};
+            const char* get_var()
+            {
+                if (getenv(string_var)!=NULL){ return getenv(string_var); }
+                else { return default_str; }
+            }
+            void print(){
+                if (getenv(string_var)!=NULL){ printf("%s: %s\n", string_var, getenv(string_var)); }
+                else { printf("%s:%s\n", string_var, default_str); }
+            }
+    };
+
     class FragShader : public Variables
     {
         public:
@@ -32,8 +59,8 @@ namespace MachyCore
                 else { return default_str; }
             }
             void print(){
-                if (getenv(string_var)!=NULL){ printf("%s\n", getenv(string_var));}
-                else { printf("%s\n", default_str);}
+                if (getenv(string_var)!=NULL){ printf("%s, %s\n",string_var, getenv(string_var));}
+                else { printf("%s, %s\n", string_var, default_str);}
             }
     };
 
@@ -47,38 +74,143 @@ namespace MachyCore
                 else { return default_str;}
             }
             void print(){
-                if (getenv(string_var)!=NULL){ printf("%s\n", getenv(string_var));}
-                else { printf("%s\n", default_str);}
+                if (getenv(string_var)!=NULL){ printf("%s, %s\n",string_var, getenv(string_var));}
+                else { printf("%s, %s\n", string_var, default_str);}
             }
     };
 
-    class IPaddress : public Variables
+    class TCPIPaddress : public Variables
     {
         public:
-            IPaddress( const char* a, const char* b) : Variables( a, b ) {};
+            TCPIPaddress( const char* a, const char* b) : Variables( a, b ) {};
             const char *get_var()
             {
                 if (getenv(string_var)!=NULL){ return getenv(string_var); }
                 else { return default_str;}
             }
             void print(){
-                if (getenv(string_var)!=NULL){ printf("%s\n", getenv(string_var));}
-                else { printf("%s\n", default_str);}
+                if (getenv(string_var)!=NULL){ printf("%s, %s\n",string_var, getenv(string_var));}
+                else { printf("%s, %s\n", string_var, default_str);}
             }
     };
 
-    class Portaddress : public Variables
+    class TCPPortaddress : public Variables
     {
         public:
-            Portaddress( const char* a, const char* b) : Variables( a, b ) {};
+            TCPPortaddress( const char* a, const char* b) : Variables( a, b ) {};
             const char *get_var()
             {
                 if (getenv(string_var)!=NULL){ return getenv(string_var); }
                 else { return default_str; }
             }
             void print(){
-                if (getenv(string_var)!=NULL){ printf("%s\n", getenv(string_var));}
-                else { printf("%s\n", default_str);}
+                if (getenv(string_var)!=NULL){ printf("%s, %s\n",string_var, getenv(string_var));}
+                else { printf("%s, %s\n", string_var, default_str);}
+            }
+    };
+
+    class CURLWeburl: public Variables
+    {
+        public:
+            CURLWeburl( const char* a, const char* b) : Variables( a, b ) {};
+            const char *get_var()
+            {
+                if (getenv(string_var)!=NULL){ return getenv(string_var); }
+                else { return default_str;}
+            }
+            void print(){
+                if (getenv(string_var)!=NULL){ printf("%s, %s\n",string_var, getenv(string_var));}
+                else { printf("%s, %s\n", string_var, default_str);}
+            }
+    };
+
+    class HTTPIPaddress: public Variables
+    {
+        public:
+            HTTPIPaddress( const char* a, const char* b) : Variables( a,b ) {};
+            const char *get_var()
+            {
+                if (getenv(string_var)!=NULL){ return getenv(string_var); }
+                else { return default_str;}
+            }
+            void print(){
+                if (getenv(string_var)!=NULL){ printf("%s, %s\n",string_var, getenv(string_var));}
+                else { printf("%s, %s\n", string_var, default_str);}
+            }
+    };
+
+    class HTTPPortaddress: public Variables
+    {
+        public:
+            HTTPPortaddress( const char* a, const char* b) : Variables( a,b ) {};
+            const char *get_var()
+            {
+                if (getenv(string_var)!=NULL){ return getenv(string_var); }
+                else { return default_str;}
+            }
+            void print(){
+                if (getenv(string_var)!=NULL){ printf("%s, %s\n",string_var, getenv(string_var));}
+                else { printf("%s, %s\n", string_var, default_str);}
+            }
+    };
+
+    class HTTPRoutename: public Variables
+    {
+        public:
+            HTTPRoutename( const char* a, const char* b) : Variables( a,b ) {};
+            const char *get_var()
+            {
+                if (getenv(string_var)!=NULL){ return getenv(string_var); }
+                else { return default_str;}
+            }
+            void print(){
+                if (getenv(string_var)!=NULL){ printf("%s, %s\n",string_var, getenv(string_var));}
+                else { printf("%s, %s\n", string_var, default_str);}
+            }
+    };
+
+    class SelectScene: public Variables
+    {
+        public:
+            SelectScene( const char* a, const char* b) : Variables( a,b ) {};
+            const char *get_var()
+            {
+                if (getenv(string_var)!=NULL){ return getenv(string_var); }
+                else { return default_str;}
+            }
+            void print(){
+                if (getenv(string_var)!=NULL){ printf("%s, %s\n",string_var, getenv(string_var));}
+                else { printf("%s, %s\n", string_var, default_str);}
+            }
+    };
+
+    class SampleSize: public Variables
+    {
+        public:
+            SampleSize( const char* a, const char* b) : Variables( a,b ) {};
+            const char *get_var()
+            {
+                if (getenv(string_var)!=NULL){ return getenv(string_var); }
+                else { return default_str;}
+            }
+            void print(){
+                if (getenv(string_var)!=NULL){ printf("%s, %s\n",string_var, getenv(string_var));}
+                else { printf("%s, %s\n", string_var, default_str);}
+            }
+    };
+
+    class LineWidth: public Variables
+    {
+        public:
+            LineWidth( const char* a, const char* b) : Variables( a,b ) {};
+            const char *get_var()
+            {
+                if (getenv(string_var)!=NULL){ return getenv(string_var); }
+                else { return default_str;}
+            }
+            void print(){
+                if (getenv(string_var)!=NULL){ printf("%s, %s\n",string_var, getenv(string_var));}
+                else { printf("%s, %s\n", string_var, default_str);}
             }
     };
 }
