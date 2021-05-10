@@ -20,7 +20,10 @@ git submodule update --init --recursive
 ```
 
 ### build image
-
+If you dont want to actually build the image you can also pull the image from our machytech docker hub repository.
+```
+docker run -it --mount type=bind,source=<path-to-target>,target=/home docker.io/machytech/armv7-build@sha256:f4f929ea0a0c451e0407b63fc2949cda6f3d335fc73c5068df483788b97f85f8 /bin/bash
+```
 build the image using the dockerfile. Assuming you have docker and buildx installed. Documentation is very good so check for latest installation instruction on their website. I have installed buildx from their github page, I would advise doing this as well.
 To create a build instance for buildx do the following.
 ```
