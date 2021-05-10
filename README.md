@@ -16,7 +16,7 @@ cmake ../ && make -j4
 ### git submodules
 we are using glfw and glmath that you need to install as git submodules.
 ```
-git pull --recurse-submodules
+git submodule update --init --recursive
 ```
 
 ### build image
@@ -64,8 +64,15 @@ Change often used variables without having to recompile. Simpy export the variab
 ```
 GLSL_APP_VERT #vertex shader directory
 GLSL_APP_FRAG #fragment shader directory
-IP_ADDR #ip
-PORT_ADDR #port
+SCENE #used scene
+TCP_IP #tcp ip address
+TCP_PORT # tcp port address
+HTTP_IP # http ip address
+HTTP_PORT # http port address
+HTTP_ROUTE # http route
+CURL_WEBURL # web url to data file (for robot path)
+SAMPLE_SIZE # number of sample used from robot path
+LINEWIDTH # width of line
 ```
 
 * systemD service
