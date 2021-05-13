@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/app.dir/src/glad.cpp.o CMakeFiles/app.dir/src/machy_utils.cpp.o CMakeFiles/app.dir/src/main.cpp.o CMakeFiles/app.dir/src/scene.cpp.o CMakeFiles/app.dir/src/socketdev.cpp.o  -o app libLibsModule.a -lX11 -lXrandr -ljson-c -lcurl vendor/glfw/src/libglfw3.a -lpthread /usr/lib/arm-linux-gnueabihf/librt.so /usr/lib/arm-linux-gnueabihf/libm.so -ldl 

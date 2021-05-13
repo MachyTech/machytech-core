@@ -1,0 +1,2 @@
+/usr/bin/ar qc libLibsModule.a  CMakeFiles/LibsModule.dir/src/glad.cpp.o CMakeFiles/LibsModule.dir/src/machy_utils.cpp.o CMakeFiles/LibsModule.dir/src/main.cpp.o CMakeFiles/LibsModule.dir/src/scene.cpp.o CMakeFiles/LibsModule.dir/src/socketdev.cpp.o
+/usr/bin/ranlib libLibsModule.a
