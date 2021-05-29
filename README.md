@@ -45,6 +45,8 @@ docker run -it --mount type=bind,source=<path-to-source>,target=/home <name> /bi
 ```
 
 ## new features
+* Vertical window (29/05/2021)
+* White background (29/05/2021)
 * ARMv7 build image (05/05/2021)
 
 docker build image ARMv7 with debian and depencies pre-installed
