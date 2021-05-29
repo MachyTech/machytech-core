@@ -19,6 +19,8 @@ void create_env(MachyCore::Environment *env){
     env->appendVariable( new MachyCore::StdEnvVariable("CURL_WEBURL", "http://0.0.0.0:8000/trajectory_100_fpg_out.txt"));
     env->appendVariable( new MachyCore::StdEnvVariable("SAMPLE_SIZE", "5"));
     env->appendVariable( new MachyCore::StdEnvVariable("LINEWIDTH", "10"));
+    env->appendVariable( new MachyCore::StdEnvVariable("WINDOW_WIDTH", "640"));
+    env->appendVariable( new MachyCore::StdEnvVariable("WINDOW_HEIGHT", "360"));
 }
 
 int main()
@@ -31,10 +33,9 @@ int main()
     /* initialize the machy util functions */
     MachyCore::MachyGLutils glutils;
     /* creating openGL context */
-    MachyCore::Window win;
+    MachyCore::Window win(env->get(WINDOW_WIDTH), env->get(WINDOW_HEIGHT));
     /* call shader linker */
     GLuint program = glutils.link_shader(env->get(GLSL_APP_VERT), env->get(GLSL_APP_FRAG));
-    
     MachyCore::Scene *scene;
     MachyCore::RobotPathSim robotpath(program, env->get(CURL_WEBURL));
     if(env->get(SCENE).compare("robotpath") == 0){
