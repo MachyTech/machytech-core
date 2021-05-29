@@ -10,14 +10,16 @@ namespace MachyCore
         glEnableVertexAttribArray(vpos_location);
     }
 
-    void RobotPathSim::render(GLFWwindow* win)
+    void RobotPathSim::render(GLFWwindow* win, int linewidth, GLint samplesize)
     {
+        std::cout<<linewidth<<","<<samplesize<<std::endl;
+        std::cout<<len_location<<std::endl;
         for (int i=0; i<simdata.size(); i++)
         {
             double t_begin = simdata[i].t;
             clock_t ct_begin = clock();
 
-            const GLfloat color[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+            const GLfloat color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
             glClearBufferfv(GL_COLOR, 0, color);
 
             int width, height;
@@ -32,7 +34,10 @@ namespace MachyCore
 
             glUniform2fv(off_location, 1, glm::value_ptr(offset));
             glUniformMatrix4fv(rot_location, 1, GL_FALSE, glm::value_ptr(trans));
+            glUniform1f(len_location, (GLfloat) samplesize/10);
             glDrawArrays(GL_LINE_STRIP, 0 , n_points);
+            glEnable(GL_LINE_SMOOTH);
+            glLineWidth(linewidth);
 
             double t_end = simdata[i+1].t;
             clock_t ct_end = clock();
@@ -40,9 +45,9 @@ namespace MachyCore
             double dt = double(t_end - t_begin);
 
             printf("\rfps : %lf", 1/cdt);
-            // printf(" idle: %lf", double(dt-cdt));
-            if(double(dt-cdt)>0){usleep(double(dt-cdt) * 1000000);}
-
+            //printf("\r idle: %lf", double(dt-cdt));
+            if(double(dt-cdt)>0){usleep(double(dt-cdt)*1000000);}
+            
             glfwSwapBuffers(win);
             glfwPollEvents();
             if (glfwWindowShouldClose(win)){
@@ -75,6 +80,7 @@ void read_remote_csv(char* weburl, std::vector<Data> &position)
     curl_handle = curl_easy_init();
     if(curl_handle)
     {
+        std::cout<<"using weburl: "<<weburl<<std::endl;
         curl_easy_setopt(curl_handle, CURLOPT_URL, weburl);
         curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &buffer);
@@ -104,11 +110,12 @@ void read_remote_csv(char* weburl, std::vector<Sim> &virposition)
     CURL *curl_handle;
     CURLcode res;
     std::string buffer;
-
+    
     curl_global_init(CURL_GLOBAL_ALL);
     curl_handle = curl_easy_init();
     if(curl_handle)
     {
+        std::cout<<"using weburl: "<<weburl<<std::endl;
         curl_easy_setopt(curl_handle, CURLOPT_URL, weburl);
         curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &buffer);
@@ -129,7 +136,7 @@ void read_remote_csv(char* weburl, std::vector<Sim> &virposition)
                     ss >> value[i];
                     ss.ignore();
                 }
-                virposition.push_back({value[0], value[1], value[2], value[3], value[6]});
+                virposition.push_back({value[0], value[1], value[2], value[3], value[6]+1.57});
             }
         }
     }
@@ -153,7 +160,7 @@ void read_csv(std::string filedir, std::vector<Sim> &virposition)
                 ss >> value[i];
                 ss.ignore();
             }
-            virposition.push_back({value[0], value[1], value[2], value[3], value[6]});
+            virposition.push_back({value[0], value[1], value[2], value[3], (value[6]+1.57)});
         }
     }
 }
