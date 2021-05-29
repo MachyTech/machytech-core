@@ -76,6 +76,8 @@ HTTP_ROUTE # http route
 CURL_WEBURL # web url to data file (for robot path)
 SAMPLE_SIZE # number of sample used from robot path
 LINEWIDTH # width of line
+WINDOW_WIDTH # width of openGL rendering context
+WINDOW_HEIGHT # height of openGL rendering context
 ```
 
 * systemD service
