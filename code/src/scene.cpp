@@ -19,7 +19,7 @@ namespace MachyCore
             double t_begin = simdata[i].t;
             clock_t ct_begin = clock();
 
-            const GLfloat color[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+            const GLfloat color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
             glClearBufferfv(GL_COLOR, 0, color);
 
             int width, height;
@@ -136,7 +136,7 @@ void read_remote_csv(char* weburl, std::vector<Sim> &virposition)
                     ss >> value[i];
                     ss.ignore();
                 }
-                virposition.push_back({value[0], value[1], value[2], value[3], value[6]});
+                virposition.push_back({value[0], value[1], value[2], value[3], value[6]+1.57});
             }
         }
     }
@@ -160,7 +160,7 @@ void read_csv(std::string filedir, std::vector<Sim> &virposition)
                 ss >> value[i];
                 ss.ignore();
             }
-            virposition.push_back({value[0], value[1], value[2], value[3], value[6]});
+            virposition.push_back({value[0], value[1], value[2], value[3], (value[6]+1.57)});
         }
     }
 }

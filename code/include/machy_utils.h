@@ -65,15 +65,18 @@ namespace MachyCore
     {
         public:
             GLFWwindow* window;
-            Window(void)
+            Window(std::string width, std::string height)
             {
                 if (!glfwInit())
                     exit(EXIT_FAILURE);
 
                 glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
                 glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+                
+                std::string::size_type sz;
 
-                window = glfwCreateWindow(640, 360, "MachyTech", NULL, NULL);
+                window = glfwCreateWindow(std::stoi(width,&sz), std::stoi(height,&sz), "MachyTech", NULL, NULL);
+                
                 if (!window)
                 {
                     glfwTerminate();

@@ -16,6 +16,8 @@
 #define CURL_WEBURL 8
 #define SAMPLE_SIZE 9
 #define LINEWIDTH 10
+#define WINDOW_WIDTH 11
+#define WINDOW_HEIGHT 12
 
 namespace MachyCore
 {

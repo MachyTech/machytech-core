@@ -45,6 +45,8 @@ docker run -it --mount type=bind,source=<path-to-source>,target=/home <name> /bi
 ```
 
 ## new features
+* Vertical window (29/05/2021)
+* White background (29/05/2021)
 * ARMv7 build image (05/05/2021)
 
 docker build image ARMv7 with debian and depencies pre-installed
@@ -76,6 +78,8 @@ HTTP_ROUTE # http route
 CURL_WEBURL # web url to data file (for robot path)
 SAMPLE_SIZE # number of sample used from robot path
 LINEWIDTH # width of line
+WINDOW_WIDTH # width of openGL rendering context
+WINDOW_HEIGHT # height of openGL rendering context
 ```
 
 * systemD service
