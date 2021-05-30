@@ -1,0 +1,13 @@
+[Unit]
+Description=machyXserver
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+User=timo
+ExecStart=/usr/local/bin/machyXserver.sh
+ExecStartPost=/bin/bash -c "sleep 5 && export DISPLAY=:0 && xrandr --output HDMI-0 --mode 720x400 --rate 70"
+
+[Install]
+Alias=machyXserver

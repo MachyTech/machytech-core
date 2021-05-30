@@ -79,20 +79,18 @@ CURL_WEBURL # web url to data file (for robot path)
 SAMPLE_SIZE # number of sample used from robot path
 LINEWIDTH # width of line
 ```
-
 * systemD service
 
 .conf file for systemd service
 
 ## Future work
 
-* Simulation mode environment variable
-* Simulation: direct to trajectory file used for simulation
+* machyAPI (RESTful)
 * Default scene on boot beaglebone
+* DEB packaging
 * Creating extra scenes
 * Read odometry data from sensors
-* Netwerk device driver(?)
-* CI/CD (jenkins?) to Beaglebone
+* CI/CD (jenkins?) to Jetson
 * logging
 
 ## Resources
