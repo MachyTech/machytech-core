@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.20.1)
 
 # name of the project
 project(boosthttpserver)
@@ -16,6 +16,11 @@ file(GLOB SOURCES "src/*.cpp")
 # boost
 find_package( Boost 1.58 REQUIRED system )
 include_directories(${Boost_INCLUDE_DIRS})
+
+# use boost enhanced functions(?)
+if(BOOST_ENHANCED)
+  add_compile_definitions(BOOST_ENHANCED)
+endif()
 
 # examples
 if(BUILD_EXAMPLES)

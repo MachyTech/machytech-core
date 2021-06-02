@@ -12,7 +12,20 @@ cmake ../ && make -j4
 ```
 ./app
 ``` 
-
+### cmake
+I prefer using latest cmake
+```
+curl -OL https://github.com/Kitware/CMake/releases/download/v3.20.1/cmake-3.20.1-SHA-256.txt
+curl -OL https://github.com/Kitware/CMake/releases/download/v3.20.1/cmake-3.20.1.tar.gz
+sha256sum -c --ignore-missing cmake-3.20.1-SHA-256.txt
+```
+If this returns ok unzip folder and make install
+```
+tar -zxvf cmake-3.20.1.tar.gz
+cmake .
+make
+make install
+```
 ### git submodules
 we are using glfw and glmath that you need to install as git submodules.
 ```

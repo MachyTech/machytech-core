@@ -2,7 +2,7 @@
 
 namespace machyAPI
 {
-    namespace machysockets
+    namespace machysockets_Sync
     {
         int create_passive_synchronous_socket()
         {
@@ -26,11 +26,16 @@ namespace machyAPI
                 // connect to client
                 acceptor.accept(sock);
                 // read from this socket
-                readFromSocket(sock);
+#ifdef BOOST_ENHANCED
+                std::string socketData = readFromSocketEnhanced(sock);
+#else
+                std::string socketData = readFromSocket(sock);
+#endif
+                std::cout<<socketData<<std::endl;
             }
             catch(system::system_error &e){
                 std::cout<< "Error occured! Error code = " << e.code()
-                << ". Message: " << e.what();
+                << ". Message: " << e.what()<<std::endl;
                 return e.code().value();
             }
             return 0;
@@ -51,7 +56,11 @@ namespace machyAPI
                 // connecting a socket
                 sock.connect(ep);
                 // writing to the socket
+#ifdef BOOST_ENHANCED
+                writeToSocketEnhanced(sock);
+#else
                 writeToSocket(sock);
+#endif
             } 
             catch(system::system_error &e){
                 std::cout << "Error occured! Error code = " << e.code()
@@ -67,51 +76,85 @@ namespace machyAPI
             std::string buf = "Hello";
 
             std::size_t total_bytes_written = 0;
-            std::cout<<"writing : "<<buf<<std::endl;
             // write all data
             while (total_bytes_written != buf.length()) {
                 total_bytes_written += sock.write_some(
                     asio::buffer(buf.c_str() + total_bytes_written, 
                     buf.length() - total_bytes_written));
             }
-            std::cout<<"succesfull"<<std::endl;
         }
 
-        void readFromSocket(asio::ip::tcp::socket& sock)
+        void writeToSocketEnhanced(asio::ip::tcp::socket& sock)
         {
-            const unsigned char MESSAGE_SIZE = 7;
+            std::string buf = "Hello";
+            asio::write(sock, asio::buffer(buf));
+        }
+
+        std::string readFromSocket(asio::ip::tcp::socket& sock)
+        {
+            const unsigned char MESSAGE_SIZE = 5;
             char buf[MESSAGE_SIZE];
             std::size_t total_bytes_read = 0;
-
             while (total_bytes_read != MESSAGE_SIZE) {
-                total_bytes_read += sock.read_some(
-                asio::buffer(buf + total_bytes_read,
-                MESSAGE_SIZE - total_bytes_read));
+                total_bytes_read += sock.read_some(asio::buffer(buf + total_bytes_read,MESSAGE_SIZE - total_bytes_read));
             }
-            std::cout<<"recieved something!"<<std::endl;
-            //return std::string(buf, total_bytes_read);
+            return std::string(buf, total_bytes_read);
         }
 
-        void callback(const boost::system::error_code& ec,
-            std::size_t bytes_transferred,
-            std::shared_ptr<Session> s)
+        std::string readFromSocketEnhanced(asio::ip::tcp::socket& sock)
         {
-            if (ec != 0){
-                std::cout << "Error occured! Error code = "<<ec.value()
-                        << ". Message: "<< ec.message();
-                return; 
-            }
-            s->total_bytes_read += bytes_transferred;
+            const unsigned char MESSAGE_SIZE = 5;
+            char buf[MESSAGE_SIZE];
+            asio::read(sock, asio::buffer(buf, MESSAGE_SIZE));
 
-            if (s->total_bytes_read == s->buf_size) {
+            return std::string(buf, MESSAGE_SIZE);
+        }
+
+        std::string readFromSocketDelim(asio::ip::tcp::socket& sock)
+        {
+            asio::streambuf buf;
+            // read data from the socket until \n is encounterd
+            asio::read_until(sock, buf, '\n');
+            std::string message;
+            // buffer may contain rubbish after \n
+            std::istream input_stream(&buf);
+            std::getline(input_stream, message);
+            return message;
+        }
+    }
+    namespace machysockets_aSync
+    {
+        void write_callback(const boost::system::error_code& ec, std::size_t bytes_transferred, std::shared_ptr<write_Session> s)
+        {
+            if (ec != 0) {
+                std::cout << "Error occured! Error code = "<< ec.value() << ". Message: "<< ec.message();
                 return;
             }
 
-            s->sock->async_read_some(
-                asio::buffer(s->buf.get() + s->total_bytes_read, 
-                    s->buf_size - s->total_bytes_read),
-                std::bind(callback, std::placeholders::_1,
-                    std::placeholders::_2, s));
+            s->total_bytes_written += bytes_transferred;
+            if (s->total_bytes_written == s->buf.length()) {
+                return;
+            }
+            s->sock->async_write_some(
+                asio::buffer(s->buf.c_str() + s->total_bytes_written,
+                                s->buf.length() - s->total_bytes_written),
+                std::bind(write_callback, std::placeholders::_1,
+                            std::placeholders::_2, s)
+            );
+        }
+
+        void writeToSocket(std::shared_ptr<asio::ip::tcp::socket> sock)
+        {
+            std::shared_ptr<write_Session> s(new write_Session);
+
+            s->buf = std::string("Hello");
+            s->total_bytes_written  = 0;
+            s->sock = sock;
+
+            s->sock->async_write_some(
+                asio::buffer(s->buf),
+                std::bind(write_callback, std::placeholders::_1, std::placeholders::_2, s)
+            );
         }
     }
 }
