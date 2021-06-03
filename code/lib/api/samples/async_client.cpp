@@ -4,10 +4,10 @@ using namespace machyAPI;
 
 int main()
 {
-    int err = machysockets_Sync::connect_synchronous_socket();
+    int err = machysockets_aSync::connect_asynchronous_socket();
     if(err!=0)
     {
-        std::cout<<"error in connect_synchronous_socket: "<< err <<std::endl;
+        std::cout<<"error in connect_asynchronous_socket: "<< err <<std::endl;
         exit(-1);
     }
     else

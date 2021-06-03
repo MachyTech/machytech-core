@@ -6,6 +6,8 @@ project(boosthttpserver)
 # enable language
 enable_language(CXX)
 set (CMAKE_CXX_STANDARD 11)
+# pthread
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 # header files
 include_directories(include)
 
@@ -24,8 +26,12 @@ endif()
 
 # examples
 if(BUILD_EXAMPLES)
-  add_executable(client "samples/client.cpp" ${SOURCES})
-  target_link_libraries(client ${Boost_LIBRARIES})
-  add_executable(server "samples/server.cpp" ${SOURCES})
-  target_link_libraries(server ${Boost_LIBRARIES})
+  add_executable(sync_client "samples/sync_client.cpp" ${SOURCES})
+  target_link_libraries(sync_client ${Boost_LIBRARIES})
+  add_executable(sync_server "samples/sync_server.cpp" ${SOURCES})
+  target_link_libraries(sync_server ${Boost_LIBRARIES})
+  add_executable(async_client "samples/async_client.cpp" ${SOURCES})
+  target_link_libraries(async_client ${Boost_LIBRARIES})
+  add_executable(async_server "samples/async_server.cpp" ${SOURCES})
+  target_link_libraries(async_server ${Boost_LIBRARIES})
 endif()
