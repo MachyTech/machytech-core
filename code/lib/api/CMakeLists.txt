@@ -8,6 +8,7 @@ enable_language(CXX)
 set (CMAKE_CXX_STANDARD 11)
 # pthread
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
+# SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_NO_CXX11_SCOPED_ENUMS")
 # header files
 include_directories(include)
 
@@ -34,4 +35,6 @@ if(BUILD_EXAMPLES)
   target_link_libraries(async_client ${Boost_LIBRARIES})
   add_executable(async_server "samples/async_server.cpp" ${SOURCES})
   target_link_libraries(async_server ${Boost_LIBRARIES})
+  add_executable(async_httpserver "samples/async_httpserver.cpp" ${SOURCES})
+  target_link_libraries(async_httpserver ${Boost_LIBRARIES})
 endif()
