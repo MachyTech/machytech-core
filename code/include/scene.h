@@ -22,13 +22,6 @@
 
 #define WEBURL_SIZE 254
 
-struct Data{
-    float x, y;
-};
-
-struct Sim{
-    float x, y, t, v, theta;
-};
 
 void read_csv(std::string filedir, std::vector<Data> &position);
 /* 
@@ -64,8 +57,16 @@ void print_csv(std::vector<Sim> &virposition);
 namespace MachyCore
 {
     /*
-     *
+     * core modules
      */
+    struct Data{
+        float x, y;
+    };
+
+    struct Sim{
+        float x, y, t, v, theta;
+    };
+    
     class Scene
     {
         protected:

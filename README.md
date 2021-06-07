@@ -25,6 +25,17 @@ tar -zxvf cmake-3.20.1.tar.gz
 cmake .
 make
 make install
+
+### BOOST
+you need a very specific version of boost. BOOST 1.58.0
+```
+sudo apt-get -y install build-essential g++ python-dev autotools-dev libicu-dev libbz2-dev
+wget http://downloads.sourceforge.net/project/boost/boost/1.54.0/boost_1_54_0.tar.gz
+tar -zxvf boost_1_58_0.tar.gz
+./bootstrap.sh
+./b2 --with=all -j $cpuCores install
+```
+
 ```
 ### git submodules
 we are using glfw and glmath that you need to install as git submodules.

@@ -13,6 +13,8 @@
 
 #include <fstream>
 
+#include "machycore.h"
+
 const unsigned int DEFAULT_THREAD_POOL_SIZE = 2;
 
 using namespace boost;
@@ -170,6 +172,10 @@ namespace machyAPI
         /*
          * create an asynchronous server
          */
+        /*
+         * overload when virtual position data is passed
+         */
+        /*
         void handler(unsigned int request_id, const std::string& response, const system::error_code& ec);
         /*
          * callback function to output results of the request execution
@@ -316,12 +322,16 @@ namespace machyAPI
                 /*
                 * cleanup
                 */
-                std::string ProcessRequest(asio::streambuf& request);
+                std::string dummy_ProcessRequest(asio::streambuf& request);
                 /*
                 * this implements the service. Default is a dummy service
                 * that runs a dummy loop performing one million increment
                 * operations.
                 */
+                std::string trajectory_ProcessRequest(asio::streambuf& request);
+                /*
+                 * this will store the request in a data structure
+                 */
                 std::shared_ptr<asio::ip::tcp::socket> m_sock;
                 std::string m_response;
                 asio::streambuf m_request;

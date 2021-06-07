@@ -386,6 +386,7 @@ namespace machyAPI
             }
             return 0;
         }
+
         void aSyncTCPClient::emulateLongComputationOp(unsigned int duration_sec, 
             const std::string& raw_ip_address,
             unsigned short port_num,
@@ -575,7 +576,7 @@ namespace machyAPI
         void service::StartHandling()
         {
             std::cout<<"start service\n";
-            asio::async_read_until(*m_sock.get(), m_request, '\n', 
+            asio::async_read_until(*m_sock.get(), m_request, "\n\n", 
                 [this]( const boost::system::error_code& ec, std::size_t bytes_transferred)
                 {onRequestRecieved(ec, bytes_transferred);});
         }
@@ -648,7 +649,7 @@ namespace machyAPI
             on_finish();
         }
 
-        void service::onRequestRecieved(const boost::system::error_code& ec, std::size_t bytes_transferred)
+        void service::onRequestRecieved(const boost::system::error_code& ec, std::size_t bytes_transferred )
         {
             std::cout<<"request recieved!\n";
             if (ec != 0) {
@@ -656,8 +657,9 @@ namespace machyAPI
                 onFinish();
                 return;
             }
-            m_response = ProcessRequest(m_request);
-            std::cout<<"meanwhile sending response\n";
+            trajectory_ProcessRequest(m_request);
+            machycore::print_vpos_data();
+            m_response = "OK\n";
             asio::async_write(*m_sock.get(), asio::buffer(m_response),
                     [this]( const boost::system::error_code& ec, std::size_t bytes_transferred)
                         { onResponseSend(ec, bytes_transferred);});
@@ -671,18 +673,49 @@ namespace machyAPI
             onFinish();
         }
 
-        std::string service::ProcessRequest(asio::streambuf& request)
+        std::string service::dummy_ProcessRequest(asio::streambuf& request)
         {
             int i=0;
+            std::ostringstream ss;
+            ss << &request;
+            std::string s = ss.str();
+            std::cout<<"recieved: "<<s<<std::endl;
+
             std::cout<<"starting cpu process emulation\n";
             while (i != 10000000)
                 i++;
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             std::cout<<"finished...\n";
-            std::string response = "Response\n";
-            return response;
+            return s;
         }
 
+        std::string service::trajectory_ProcessRequest(asio::streambuf& request)
+        {
+            // clear vector
+            machycore::virposition->clear();
+            std::stringstream ss_request;
+            ss_request << &request;
+            std::cout<<ss_request.str();
+            float value[5];
+            std::string line;
+            while(std::getline(ss_request, line))
+            {
+                //std::cout<<line<<std::endl;
+                std::stringstream ss(line);
+                ss >> value[0];
+                ss.ignore();
+                ss >> value[1];
+                ss.ignore();
+                ss >> value[2];
+                ss.ignore();
+                ss >> value[3];
+                ss.ignore();
+                ss >> value[4];
+                machycore::virposition->push_back( new machycore::Sim( value ) );
+            }
+            std::string response("OK\n");
+            return response;
+        }
         void acceptor::InitAccept()
         {
             std::shared_ptr<asio::ip::tcp::socket> 

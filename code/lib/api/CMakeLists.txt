@@ -10,14 +10,14 @@ set (CMAKE_CXX_STANDARD 11)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 # SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_NO_CXX11_SCOPED_ENUMS")
 # header files
-include_directories(include)
+include_directories(include ../machycore/include)
 
 # sources
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.cpp" "../machycore/src/*.cpp")
 
 # link libraries
 # boost
-find_package( Boost 1.58 REQUIRED system )
+find_package( Boost 1.58 EXACT REQUIRED system )
 include_directories(${Boost_INCLUDE_DIRS})
 
 # use boost enhanced functions(?)
@@ -27,7 +27,7 @@ endif()
 
 # examples
 if(BUILD_EXAMPLES)
-  add_executable(sync_client "samples/sync_client.cpp" ${SOURCES})
+  add_executable(sync_client "samples/sync_client.cpp" ${SOURCES} "")
   target_link_libraries(sync_client ${Boost_LIBRARIES})
   add_executable(sync_server "samples/sync_server.cpp" ${SOURCES})
   target_link_libraries(sync_server ${Boost_LIBRARIES})
