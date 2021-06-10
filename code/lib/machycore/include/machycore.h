@@ -25,8 +25,8 @@ namespace machycore
 
     struct Sim{
         float x, y, t, v, theta;
-        Sim(float a[5]) : x(a[1]),
-            y(a[2]), t(a[3]), v(a[4]), theta(a[5])
+        Sim(float a[5]) : x(a[0]),
+            y(a[1]), t(a[2]), v(a[3]), theta(a[4])
         {}
     };
     /*

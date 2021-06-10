@@ -693,29 +693,26 @@ namespace machyAPI
         {
             // clear vector
             machycore::virposition->clear();
-            std::stringstream ss_request;
-            ss_request << &request;
-            std::cout<<ss_request.str();
-            float value[5];
+            std::istream is(&request);
             std::string line;
-            while(std::getline(ss_request, line))
+            float value[5];
+            while (is)
             {
-                //std::cout<<line<<std::endl;
-                std::stringstream ss(line);
-                ss >> value[0];
-                ss.ignore();
-                ss >> value[1];
-                ss.ignore();
-                ss >> value[2];
-                ss.ignore();
-                ss >> value[3];
-                ss.ignore();
-                ss >> value[4];
-                machycore::virposition->push_back( new machycore::Sim( value ) );
+                while(std::getline(is, line, '\n'))
+                {
+                    std::stringstream ss(line);
+                    for (int i=0; i<5; i++)
+                    {
+                        ss >> value[i];
+                        ss.ignore();
+                    }
+                    machycore::virposition->push_back( new machycore::Sim( value ));
+                }
             }
             std::string response("OK\n");
             return response;
         }
+
         void acceptor::InitAccept()
         {
             std::shared_ptr<asio::ip::tcp::socket> 
