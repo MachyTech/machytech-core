@@ -13,7 +13,7 @@
 
 #include <fstream>
 
-#include "machycore.h"
+#include <machycore.h>
 
 const unsigned int DEFAULT_THREAD_POOL_SIZE = 2;
 

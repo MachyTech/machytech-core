@@ -11,20 +11,31 @@ set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
-add_subdirectory(vendor/glfw)
-
+# adding subdirectories
+if (NOT TARGET glfw)
+    add_subdirectory(vendor/glfw)
+endif()
+if (NOT TARGET machyapi)    
+    add_subdirectory(lib/api)
+endif()
+if (NOT TARGET machygl)
+    add_subdirectory(lib/machygl)
+endif()
+if (NOT TARGET machyscenes)
+    add_subdirectory(lib/machyscenes)
+endif()
 # include shaders
 file(COPY shader DESTINATION .)
 
 # test csv file
-file (COPY src/trajectory_1_fpg_out.txt DESTINATION .)
+# file (COPY src/trajectory_1_fpg_out.txt DESTINATION .)
 
 # header files
 include_directories(include)
 include_directories(vendor/glm)
 
 # sources
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.cpp" "lib/api/src/*.cpp" "lib/machycore/src/*.cpp")
 
 # find curl
 find_package( CURL REQUIRED )
@@ -36,20 +47,27 @@ target_link_libraries(LibsModule -lpthread)
 target_link_libraries(LibsModule -lXrandr)
 target_link_libraries(LibsModule -ljson-c)
 target_link_libraries(LibsModule -lcurl)
-target_link_libraries(LibsModule glfw)
+# machytech
+target_link_libraries(LibsModule machyapi)
+target_link_libraries(LibsModule machyscenes)
+target_link_libraries(LibsModule machygl)
 
 # create executable
-add_executable(app ${SOURCES})
-target_link_libraries(app LibsModule)
+#add_executable(app ${SOURCES})
+#target_link_libraries(app LibsModule)
 
-install(TARGETS app
-    COMPONENT projectorapp
-    RUNTIME DESTINATION "/usr/bin"
-    LIBRARY DESTINATION "/usr/bin/"
-    DESTINATION "/usr/bin/"
-)
+# samples
+add_executable(trajectorysim ${SOURCES} "samples/trajsim.cpp")
+target_link_libraries(trajectorysim LibsModule)
 
-# create .deb package
-SET(CPACK_GENERATOR "DEB")
-SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "kk")
-INCLUDE(CPack)
+# install(TARGETS app
+#     COMPONENT projectorapp
+#     RUNTIME DESTINATION "/usr/bin"
+#     LIBRARY DESTINATION "/usr/bin/"
+#     DESTINATION "/usr/bin/"
+# )
+
+# # create .deb package
+# SET(CPACK_GENERATOR "DEB")
+# SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "kk")
+# INCLUDE(CPack)
