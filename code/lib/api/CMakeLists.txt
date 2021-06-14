@@ -8,10 +8,10 @@ add_library(machyapi SHARED ${CMAKE_CURRENT_SOURCE_DIR}/src/api.cpp)
 set_target_properties(machyapi PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(machyapi PROPERTIES SOVERSION 0.0.1)
 
-target_include_directories(machyapi PRIVATE ${CMAKE_SOURCE_DIR}/lib/api/include)
+target_include_directories(machyapi PUBLIC ${CMAKE_SOURCE_DIR}/lib/api/include)
 
 # headers
-include_directories(${CMAKE_SOURCE_DIR}/lib/machycore/include)
+#include_directories(${CMAKE_SOURCE_DIR}/lib/machycore/include)
 
 # enable language (we heavily use c++ 11)
 # enable_language(CXX)
@@ -25,16 +25,17 @@ include_directories(${CMAKE_SOURCE_DIR}/lib/machycore/include)
 # set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 # set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
-# find_package( Boost 1.58 EXACT REQUIRED system )
-# include_directories(${Boost_INCLUDE_DIRS})
-#if (NOT TARGET machycore)
-    # add_subdirectory(${CMAKE_SOURCE_DIR}/lib/machycore lib/machycore)
-# endif()
+find_package( Boost 1.58 EXACT REQUIRED system )
+include_directories(${Boost_INCLUDE_DIRS})
+
+if (NOT TARGET machycore)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/lib/machycore lib/machycore)
+endif()
 
 # include_directories(${CMAKE_SOURCE_DIR}/lib/machycore/include)
 # include_directories(${CMAKE_SOURCE_DIR}/lib/machyapi/include)
 
-# target_link_libraries(machyapi machycore)
+target_link_libraries(machyapi machycore ${Boost_LIBRARIES})
 
 # # use boost enhanced functions(?)
 # if(BOOST_ENHANCED)

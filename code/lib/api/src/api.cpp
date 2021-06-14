@@ -319,8 +319,29 @@ namespace machyAPI
                     thread_pool_size = DEFAULT_THREAD_POOL_SIZE;
                 
                 srv.start(port_num, thread_pool_size);
-                std::this_thread::sleep_for(std::chrono::seconds(60));
+                std::this_thread::sleep_for(std::chrono::seconds(5));
                 srv.stop();
+            }
+            catch (system::system_error&e) {
+                std::cout << "Error occured! Error code = "<<e.code()
+                    <<". Message: "<<e.what();
+            }
+            return 0;
+        }
+
+        int asynchronous_server(std::string port)
+        {
+            unsigned short port_num = std::stoi(port);
+
+            try {
+                server srv;
+
+                unsigned int thread_pool_size = std::thread::hardware_concurrency() * 2;
+                if (thread_pool_size == 0)
+                    thread_pool_size = DEFAULT_THREAD_POOL_SIZE;
+                
+                srv.start(port_num, thread_pool_size);
+                while(1){}
             }
             catch (system::system_error&e) {
                 std::cout << "Error occured! Error code = "<<e.code()

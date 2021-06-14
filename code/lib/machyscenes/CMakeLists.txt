@@ -3,12 +3,12 @@ cmake_minimum_required(VERSION 3.20.1)
 # name of the project
 project(machyscenes VERSION 0.0.1 DESCRIPTION "scenes used by machytechs projecting system")
 
-add_library(machyscenes SHARED src/machyscene.cpp)
+add_library(machyscenes STATIC src/machyscene.cpp)
 
 set_target_properties(machyscenes PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(machyscenes PROPERTIES SOVERSION 0.0.1)
 
-target_include_directories(machyscenes PRIVATE include)
+target_include_directories(machyscenes PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # enable_language(CXX)
 # set (CMAKE_CXX_STANDARD 11)
@@ -38,9 +38,9 @@ target_include_directories(machyscenes PRIVATE include)
 
 # header files
 include_directories(${CMAKE_SOURCE_DIR}/vendor/glm)
-include_directories(${CMAKE_SOURCE_DIR}/lib/machycore/include)
-include_directories(${CMAKE_SOURCE_DIR}/lib/machygl/include)
-include_directories(${CMAKE_SOURCE_DIR}/lib/api/include)
+#include_directories(${CMAKE_SOURCE_DIR}/lib/machycore/include)
+#include_directories(${CMAKE_SOURCE_DIR}/lib/machygl/include)
+#include_directories(${CMAKE_SOURCE_DIR}/lib/api/include)
 
 # sources
 # file(GLOB SOURCES "src/*.cpp")
@@ -48,19 +48,21 @@ include_directories(${CMAKE_SOURCE_DIR}/lib/api/include)
 # boost
 # find_package( Boost 1.58 EXACT REQUIRED system )
 # include_directories(${Boost_INCLUDE_DIRS})
+if (NOT TARGET glfw)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/vendor/glfw vendor/glfw)
+endif()
 
 # # link libraries
-# ADD_LIBRARY(SceneModules ${SOURCES})
-# target_link_libraries(SceneModules -lX11)
-# target_link_libraries(SceneModules -lpthread)
-# target_link_libraries(SceneModules -lXrandr)
+target_link_libraries(machyscenes -lX11)
+# target_link_libraries(machyscenes -lpthread)
+target_link_libraries(machyscenes -lXrandr)
 # target_link_libraries(SceneModules -ljson-c)
 # target_link_libraries(SceneModules -lcurl)
-# target_link_libraries(SceneModules glfw)
+target_link_libraries(machyscenes glfw)
 # # machytech libraries
-# target_link_libraries(SceneModules machygl)
-# target_link_libraries(SceneModules machyapi)
-# target_link_libraries(SceneModules machycore)
+target_link_libraries(machyscenes machygl)
+target_link_libraries(machyscenes machyapi)
+target_link_libraries(machyscenes machycore)
 # ---------------------------------------------------------
 #   Install
 # ---------------------------------------------------------

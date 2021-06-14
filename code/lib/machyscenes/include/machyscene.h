@@ -19,7 +19,7 @@
 #include <string>
 
 #include <machycore.h>
-#include <machygl.h>
+#include "machygl.h"
 #include <api.h>
 
 namespace machyscene
@@ -29,26 +29,30 @@ namespace machyscene
      */
     class Scene
     {
+        protected:
+            GLuint program, n_points;
         public:
             Scene(GLuint a)
             {
                 program = a;
             }
             virtual void bind_buffer() {};
+            virtual void print_buffer() {};
             virtual void render(GLFWwindow* win, int linewidth, int samplesize) {};
-            virtual ~Scene() {};
-        protected:
-            GLuint program, n_points;
+            virtual ~Scene() { };
     };
 
-    class trajectorysim : public Scene
+    class TrajectorySim : public Scene
     {
+        private:
+            GLuint vertex_array_object, buffer, rot_location, vpos_location, off_location, len_location; 
         public:
-            trajectorysim ( GLuint a ) : Scene(a)
+            TrajectorySim ( GLuint a ) : Scene(a)
             {
+                std::cout<<"starting trajectory sim"<<std::endl;
                 glCreateVertexArrays(1, &vertex_array_object);
                 glBindVertexArray(vertex_array_object);
-
+                std::cout<<"succesfully binding vertex"<<std::endl;
                 rot_location = glGetUniformLocation(program, "ROT");
                 off_location = glGetUniformLocation(program, "OFF");
                 vpos_location = glGetAttribLocation(program, "position");
@@ -56,18 +60,17 @@ namespace machyscene
 
                 glGenBuffers(1, &buffer);
                 glBindBuffer(GL_ARRAY_BUFFER, buffer);
-                machycore::print_vpos_data();
+                //machycore::print_vpos_data();
+                //print_buffer();
             }
             void bind_buffer();
+            void print_buffer();
             void render(GLFWwindow* win, int linewidth, int samplesize);
-            void print_data();
-            ~trajectorysim()
+            ~TrajectorySim()
             {
                 glDeleteVertexArrays(1, &vertex_array_object);
                 glDeleteProgram(program);
             }
-        private:
-            GLuint vertex_array_object, buffer, rot_location, vpos_location, off_location, len_location;       
     };
 }
 

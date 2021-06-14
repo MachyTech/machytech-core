@@ -172,6 +172,7 @@ namespace machyAPI
         /*
          * create an asynchronous server
          */
+        int asynchronous_server(std::string port);
         /*
          * overload when virtual position data is passed
          */

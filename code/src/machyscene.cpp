@@ -2,14 +2,14 @@
 
 namespace machyscene
 {
-    void trajectorysim::bind_buffer()
+    void TrajectorySim::bind_buffer()
     {
         glBufferData(GL_ARRAY_BUFFER, machycore::virposition->size()*sizeof(machycore::virposition), NULL, GL_STATIC_DRAW);
         glBufferSubData(GL_ARRAY_BUFFER, 0, machycore::virposition->size()*sizeof(machycore::virposition), &machycore::virposition[0]);
         glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(machycore::virposition[0]), NULL);
         glEnableVertexAttribArray(vpos_location);
     }
-    void trajectorysim::render(GLFWwindow* win, int linewidth, int samplesize)
+    void TrajectorySim::render(GLFWwindow* win, int linewidth, int samplesize)
     {
 /*         for(int i=0; i<machycore::virposition->size(); i++)
         { */
@@ -21,6 +21,7 @@ namespace machyscene
             clock_t ct_begin = clock();
             const GLfloat color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
             glClearBufferfv(GL_COLOR, 0, color);
+            
             int width, height;
             glfwGetFramebufferSize(win, &width, &height);
             glViewport(0, 0, width, height);
@@ -44,7 +45,7 @@ namespace machyscene
             double cdt = double(ct_last-ct_begin)/double(CLOCKS_PER_SEC);
             ct_last = clock();
 
-            printf(":\rfps : %lf", 1/cdt);
+            //printf(":\rfps : %lf", 1/cdt);
 
             if(double(dt-cdt)>0){usleep(double(dt-cdt)*1000000);}
             
@@ -53,6 +54,13 @@ namespace machyscene
             if (glfwWindowShouldClose(win)){
                 exit(1);
             }
+        }
+    }
+    void TrajectorySim::print_buffer()
+    {
+        std::cout<<"x, y, t, v, theta\n";
+        for (const auto &arr: *machycore::virposition){
+            std::cout<<arr->x<<". "<<arr->y<<", "<<arr->t<<", "<<arr->v<<", "<<arr->theta<<std::endl;
         }
     }
 }

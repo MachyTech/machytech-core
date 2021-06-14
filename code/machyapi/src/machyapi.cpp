@@ -118,12 +118,12 @@ namespace machyAPI
             trajectory_data += "\n";
             std::cout<<trajectory_data<<std::endl;
             client.send_data("127.0.0.1", 3333, handler, 1, trajectory_data);
-            std::this_thread::sleep_for(std::chrono::seconds(2));
-            client.emulateLongComputationOp(11, "127.0.0.1", 3333, handler, 2);
+            std::this_thread::sleep_for(std::chrono::seconds(10));
+            //client.emulateLongComputationOp(11, "127.0.0.1", 3333, handler, 2);
             //client.cancelRequest(1);
-            std::this_thread::sleep_for(std::chrono::seconds(6));
-            client.emulateLongComputationOp(12, "127.0.0.1", 3333, handler, 3);
-            std::this_thread::sleep_for(std::chrono::seconds(15));
+            //std::this_thread::sleep_for(std::chrono::seconds(6));
+            //client.emulateLongComputationOp(12, "127.0.0.1", 3333, handler, 3);
+            //std::this_thread::sleep_for(std::chrono::seconds(15));
             client.close();
         }
         catch (system::system_error &e) {

@@ -8,11 +8,9 @@ add_library(machycore SHARED ${CMAKE_CURRENT_SOURCE_DIR}/src/machycore.cpp)
 set_target_properties(machycore PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(machycore PROPERTIES SOVERSION 0.0.1)
 
-target_include_directories(machycore PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
+target_include_directories(machycore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # header files
-include_directories(${CMAKE_SOURCE_DIR}/lib/machycore/include)
-
 # ---------------------------------------------------------
 #   Install
 # ---------------------------------------------------------
