@@ -72,6 +72,28 @@ namespace machyscene
                 glDeleteProgram(program);
             }
     };
+
+    class plotdata : public Scene
+    {
+        private:
+            GLuint vertex_array_object, buffer;
+        public:
+            plotdata ( GLuint a ) : Scene(a)
+            {
+                glCreateVertexArrays(1, &vertex_array_object);
+                glBindVertexArray(vertex_array_object);
+
+                glGenBuffers(1, &buffer);
+                glBindBuffer(GL_ARRAY_BUFFER, buffer);
+            }
+            void bind_buffer();
+            void render(GLFWwindow* win);
+            ~plotdata()
+            {
+                glDeleteVertexArrays(1, &vertex_array_object);
+                glDeleteProgram(program);
+            }
+    };
 }
 
 #endif

@@ -1,8 +1,7 @@
-#ifndef API_H_
-#define API_H_
+#ifndef HTTP_ASYNC_API_H_
+#define HTTP_ASYNC_API_H_
 
 #include <boost/asio.hpp>
-//#include <boost/filesystem.hpp>
 
 #include <iostream>
 #include <string>
@@ -13,81 +12,84 @@
 
 #include <fstream>
 
-#include <machycore.h>
+using namespace boost;
 
 const unsigned int DEFAULT_THREAD_POOL_SIZE = 2;
 
-using namespace boost;
-
 namespace machyAPI
 {
-    /*
-     * machytech API
-     */
-     namespace machysockets_aSync
-     {
+    namespace machysockets_aSync
+    {
+        int asynchronous_httpserver();
         /*
-         * machy asynchronous sockets
+         * http server
          */
-        int asynchronous_server();
-        /*
-         * create an asynchronous server
-         */
-        int asynchronous_server(std::string port);
-        /*
-         * overload when virtual position data is passed
-         */
-        class service
+        class http_service
         {
             /*
-            * the service class implements the function
-            * provided by the server to the clients.
-            * One instance of this class is intended
-            * to handle a single client by reading the
-            * request, processing it, and then sending
-            * back the response message.
-            */
+             * service class that provides the implementation of the 
+             * http protocol.
+             */
+            static const std::map<unsigned int, std::string>http_status_stable;
             public:
-                service(std::shared_ptr<asio::ip::tcp::socket> sock) : m_sock(sock)
-                {}
+                http_service(std::shared_ptr<boost::asio::ip::tcp::socket> sock) :
+                    m_sock(sock), m_request(4096), m_response_status_code(200), m_resource_size_bytes(0)
+                {};
                 void StartHandling();
                 /*
-                * this method starts handling the client by initiating
-                * the asynchronous reading operation to read the request
-                * message from the client specifying the onRequestReceived()
-                * method as a callback.
-                */
-            private:
-                void onRequestRecieved(const boost::system::error_code& ec, std::size_t bytes_transferred);
-                /*
-                * checks for succesfull request then processrequest is
-                * called to prepare response message and the asynchronous
-                * writing operation is initiated
-                */
-                void onResponseSend(const boost::system::error_code& ec, std::size_t bytes_transferred);
-                /*
-                * check request operation succeeded then cleanup
-                */
-                void onFinish(){ delete this; };
-                /*
-                * cleanup
-                */
-                std::string dummy_ProcessRequest(asio::streambuf& request);
-                /*
-                * this implements the service. Default is a dummy service
-                * that runs a dummy loop performing one million increment
-                * operations.
-                */
-                std::string trajectory_ProcessRequest(asio::streambuf& request);
-                /*
-                 * this will store the request in a data structure
+                 * initiate asynchronous communication session with the
+                 * client connected to the socket
                  */
-                std::shared_ptr<asio::ip::tcp::socket> m_sock;
-                std::string m_response;
-                asio::streambuf m_request;
+            private:
+                void on_request_line_recieved(const boost::system::error_code& ec,
+                    std::size_t bytes_transferred);
+                /*
+                 * process the http request line 
+                 * supported: GET
+                 */
+                void on_headers_received(const boost::system::error_code& ec,
+                    std::size_t bytes_transferred);
+                /*
+                 * process and store the request header block
+                 */
+                void process_request();
+                /*
+                 * read the contents of the requested resource from
+                 * the file system and store it in a buffer
+                 */
+                void send_response();
+                /*
+                 * response message and send it to the client
+                 */
+                void on_response_sent(const boost::system::error_code& ec,std::size_t bytes_transferred);
+                /*
+                 * after response sent kill the socket and cleanup
+                 */
+                void on_finish(){ delete this; }
+                std::shared_ptr<boost::asio::ip::tcp::socket> m_sock;
+                boost::asio::streambuf m_request;
+                std::map<std::string, std::string> m_request_headers;
+                std::string m_requested_resource;
+
+                std::unique_ptr<char[]> m_resource_buffer;
+                unsigned int m_response_status_code;
+                std::size_t m_resource_size_bytes;
+                std::string m_response_headers;
+                std::string m_response_status_line;
         };
         
-        class acceptor
+        const std::map<unsigned int, std::string>
+        http_status_table = 
+        {
+            { 200, "200 OK" },
+            { 404, "404 Not Found" },
+            { 413, "413 Request Entity Too Large" },
+            { 500, "500 Server Error" },
+            { 501, "501 Not Implemented" },
+            { 505, "505 HTTP Version Not Supported" }
+        };
+        
+        class http_acceptor
         {
             /*
             * the acceptor class accepts the connection
@@ -95,13 +97,13 @@ namespace machyAPI
             * objects of the service class
             */
             public:
-                acceptor(asio::io_service&ios, unsigned short port_num) :
+                http_acceptor(asio::io_service&ios, unsigned short port_num) :
                     m_ios(ios), 
                     m_acceptor(m_ios, asio::ip::tcp::endpoint(asio::ip::address_v4::any(), port_num)), 
                     m_isStopped(false)
                 {}
                 void start(){
-                    std::cout<<"start acceptor\n";
+                    std::cout<<"start http acceptor\n";
                     m_acceptor.listen();
                     InitAccept();
                 }
@@ -129,7 +131,7 @@ namespace machyAPI
                 std::atomic<bool>m_isStopped;
         };
 
-        class server
+        class http_server
         {
             /*
             * the server class represents the server
@@ -137,7 +139,7 @@ namespace machyAPI
             * classes.
             */
             public:
-                server()
+                http_server()
                 {
                     m_work.reset(new asio::io_service::work(m_ios));
                 }
@@ -154,9 +156,10 @@ namespace machyAPI
             private:
                 asio::io_service m_ios;
                 std::unique_ptr<asio::io_service::work>m_work;
-                std::unique_ptr<acceptor>acc;
+                std::unique_ptr<http_acceptor>acc;
                 std::vector<std::unique_ptr<std::thread>>m_thread_pool;
         };
     }
 }
+
 #endif
