@@ -1,3 +1,4 @@
+# NO MAIN program only samples (needs more testing & debugging)
 # CX Laser Projector
 
 core module used on the laserprojector of MachyTech. Superfast C++ API for rendering scenes in front of an autonomous robot.
@@ -69,6 +70,9 @@ docker run -it --mount type=bind,source=<path-to-source>,target=/home <name> /bi
 ```
 
 ## new features
+* MachyAPI (14/06/2021)
+minimum working version of the machyAPI.
+    * tcp trajectory server
 * Vertical window (29/05/2021)
 * White background (29/05/2021)
 * ARMv7 build image (05/05/2021)
