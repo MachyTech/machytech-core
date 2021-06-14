@@ -63,4 +63,30 @@ namespace machyscene
             std::cout<<arr->x<<". "<<arr->y<<", "<<arr->t<<", "<<arr->v<<", "<<arr->theta<<std::endl;
         }
     }
+
+    void PlotData::bind_buffer()
+    {
+        glBufferData(GL_ARRAY_BUFFER, machycore::virposition->size()*sizeof(machycore::virposition), NULL, GL_STATIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, machycore::virposition->size()*sizeof(machycore::virposition), &machycore::virposition[0]);
+    }
+
+    void PlotData::render(GLFWwindow* win)
+    {
+        const GLfloat color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        glClearBufferfv(GL_COLOR, 0, color);
+
+        int width, height;
+        glfwGetFramebufferSize(win, &width, &height);
+        glViewport(0, 0, width, height);
+        glUseProgram(program);
+
+        glDrawArrays(GL_LINE_STRIP, 0 , machycore::virposition->size());
+        glEnable(GL_LINE_SMOOTH);
+
+        glfwSwapBuffers(win);
+        glfwPollEvents();
+        if (glfwWindowShouldClose(win)){
+            exit(1);
+        }
+    }
 }

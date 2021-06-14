@@ -38,6 +38,7 @@ namespace machyscene
             }
             virtual void bind_buffer() {};
             virtual void print_buffer() {};
+            virtual void render(GLFWwindow* win) {};
             virtual void render(GLFWwindow* win, int linewidth, int samplesize) {};
             virtual ~Scene() { };
     };
@@ -73,12 +74,12 @@ namespace machyscene
             }
     };
 
-    class plotdata : public Scene
+    class PlotData : public Scene
     {
         private:
             GLuint vertex_array_object, buffer;
         public:
-            plotdata ( GLuint a ) : Scene(a)
+            PlotData ( GLuint a ) : Scene(a)
             {
                 glCreateVertexArrays(1, &vertex_array_object);
                 glBindVertexArray(vertex_array_object);
@@ -88,7 +89,7 @@ namespace machyscene
             }
             void bind_buffer();
             void render(GLFWwindow* win);
-            ~plotdata()
+            ~PlotData()
             {
                 glDeleteVertexArrays(1, &vertex_array_object);
                 glDeleteProgram(program);

@@ -40,7 +40,7 @@ include_directories(lib/machyscenes/include)
 include_directories(lib/machygl/include)
 
 # sources
-file(GLOB SOURCES "src/*.cpp" "samples/*.cpp")
+file(GLOB SOURCES "src/*.cpp")
 
 # find curl
 # find_package( CURL REQUIRED )
@@ -65,8 +65,10 @@ target_link_libraries(LibsModule machycore)
 #target_link_libraries(app LibsModule)
 
 # samples
-add_executable(trajectorysim ${SOURCES})
+add_executable(trajectorysim ${SOURCES} "samples/trajsim.cpp")
 target_link_libraries(trajectorysim LibsModule)
+add_executable(plotdata ${SOURCES} "samples/plotdata.cpp" )
+target_link_libraries(plotdata LibsModule)
 
 install(TARGETS trajectorysim
     COMPONENT projectorapp
