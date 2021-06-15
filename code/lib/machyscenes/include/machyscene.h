@@ -63,6 +63,8 @@ namespace machyscene
                 glBindBuffer(GL_ARRAY_BUFFER, buffer);
                 //machycore::print_vpos_data();
                 //print_buffer();
+                bind_buffer();
+                print_buffer();
             }
             void bind_buffer();
             void print_buffer();
@@ -77,9 +79,39 @@ namespace machyscene
     class PlotData : public Scene
     {
         private:
-            GLuint vertex_array_object, buffer;
+            GLuint vertex_array_object, buffer, vpos_location, len_location, off_location;
         public:
             PlotData ( GLuint a ) : Scene(a)
+            {
+                glCreateVertexArrays(1, &vertex_array_object);
+                glBindVertexArray(vertex_array_object);
+
+                vpos_location = glGetAttribLocation(program, "position");
+                len_location = glGetUniformLocation(program, "LEN");
+                off_location = glGetUniformLocation(program, "OFF");
+
+                glGenBuffers(1, &buffer);
+                glBindBuffer(GL_ARRAY_BUFFER, buffer);
+                bind_buffer();
+                //print_buffer();
+            }
+            void bind_buffer();
+            void print_buffer();
+            void render(GLFWwindow* win);
+            ~PlotData()
+            {
+                glDeleteVertexArrays(1, &vertex_array_object);
+                glDeleteProgram(program);
+            }
+    };
+
+    class Triangle : public Scene
+    {
+        private: 
+            GLuint vertex_array_object, buffer;
+            std::vector<machycore::Square> square;
+        public:
+            Triangle ( GLuint a ) : Scene(a)
             {
                 glCreateVertexArrays(1, &vertex_array_object);
                 glBindVertexArray(vertex_array_object);
@@ -89,7 +121,7 @@ namespace machyscene
             }
             void bind_buffer();
             void render(GLFWwindow* win);
-            ~PlotData()
+            ~Triangle()
             {
                 glDeleteVertexArrays(1, &vertex_array_object);
                 glDeleteProgram(program);

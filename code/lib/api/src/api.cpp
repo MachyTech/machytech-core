@@ -97,7 +97,7 @@ namespace machyAPI
                 return;
             }
             trajectory_ProcessRequest(m_request);
-            machycore::print_vpos_data();
+            //machycore::print_vpos_data();
             m_response = "OK\n";
             asio::async_write(*m_sock.get(), asio::buffer(m_response),
                     [this]( const boost::system::error_code& ec, std::size_t bytes_transferred)

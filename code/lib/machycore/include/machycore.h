@@ -33,6 +33,14 @@ namespace machycore
      * data structure with x and y data. Also it uses simulation
      * data available from the path trajectory.
      */
+    struct Square
+    {
+        float x, y;
+    };
+
+    /*
+     * sample triangle
+     */
     extern std::vector<Sim*> *virposition;
     
     void print_pos_data();

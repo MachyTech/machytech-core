@@ -11,8 +11,6 @@ namespace machyscene
     }
     void TrajectorySim::render(GLFWwindow* win, int linewidth, int samplesize)
     {
-/*         for(int i=0; i<machycore::virposition->size(); i++)
-        { */
         double_t t_last = 0.0;
         clock_t ct_last = clock();
         for (const auto &arr: *machycore::virposition)
@@ -64,10 +62,24 @@ namespace machyscene
         }
     }
 
+    void PlotData::print_buffer()
+    {
+        std::cout<<"x, y, t, v, theta\n";
+        for (const auto &arr: *machycore::virposition){
+            std::cout<<arr->x<<", "<<arr->y<<", "<<arr->t<<", "<<arr->v<<", "<<arr->theta<<std::endl;
+        }
+    }
+
     void PlotData::bind_buffer()
     {
-        glBufferData(GL_ARRAY_BUFFER, machycore::virposition->size()*sizeof(machycore::virposition), NULL, GL_STATIC_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, machycore::virposition->size()*sizeof(machycore::virposition), &machycore::virposition[0]);
+        //std::cout<<"array size of virtual position : "<<(*machycore::virposition).size()<<std::endl;
+        //std::cout<<"byte size of virtual position : "<<(*machycore::virposition).size()*sizeof((*machycore::virposition))<<std::endl;
+        //std::cout<<"pointer to first object : "<<&(*machycore::virposition)[0]<<std::endl;
+        //std::cout<<"size of first object : "<<sizeof((*machycore::virposition)[0])<<std::endl;
+        glBufferData(GL_ARRAY_BUFFER, (*machycore::virposition).size()*sizeof(machycore::virposition), NULL, GL_STATIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (*machycore::virposition).size()*sizeof(machycore::virposition), &(*machycore::virposition)[0]);
+        glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(machycore::virposition[0]), NULL);
+        glEnableVertexAttribArray(vpos_location);
     }
 
     void PlotData::render(GLFWwindow* win)
@@ -79,9 +91,16 @@ namespace machyscene
         glfwGetFramebufferSize(win, &width, &height);
         glViewport(0, 0, width, height);
         glUseProgram(program);
-
+        
+        //const auto &arr = *machycore::virposition;
+        //glm::vec2 offset = glm::vec2(arr[0]->x, arr[0]->y);
+        glm::vec2 offset = glm::vec2(0.0 , 0.0);
+        //glm::vec2 offset = glm::vec2((*machycore::virposition)[0]->x, (*machycore::virposition)[0]->y);
+        glUniform2fv(off_location, 1, glm::value_ptr(offset));
+        glUniform1f(len_location, (GLfloat) 10/1000);
         glDrawArrays(GL_LINE_STRIP, 0 , machycore::virposition->size());
         glEnable(GL_LINE_SMOOTH);
+        glLineWidth(5.0);
 
         glfwSwapBuffers(win);
         glfwPollEvents();
