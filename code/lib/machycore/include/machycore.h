@@ -15,18 +15,17 @@ namespace machycore
      */
     struct Data{
         float x, y;
-        Data(float a, float b) : x(a), y(b)
+        Data(float a[2]) : x(a[0]/10), y(a[1]/10)
         {} 
     };
     /*
      * data structure with x and y data accepted by the openGL context
      */
-    extern std::vector<Data*> *position;
+    extern std::vector<Data*> *trajectory;
 
     struct Sim{
         float x, y, t, v, theta;
-        Sim(float a[5]) : x(a[0]),
-            y(a[1]), t(a[2]), v(a[3]), theta(a[4])
+        Sim(float a[5]) : x(a[0]/10), y(a[1]/10), t(a[2]), v(a[3]), theta(a[4])
         {}
     };
     /*
@@ -37,7 +36,6 @@ namespace machycore
     {
         float x, y;
     };
-
     /*
      * sample triangle
      */
@@ -52,5 +50,6 @@ namespace machycore
      * overload function print virtual data structure
      * from machytech core
      */
+    void print_data_stats();
 }
 #endif

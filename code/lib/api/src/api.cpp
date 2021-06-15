@@ -134,12 +134,43 @@ namespace machyAPI
             machycore::virposition->clear();
             std::istream is(&request);
             std::string line;
-            float value[5];
             while (is)
             {
                 while(std::getline(is, line, '\n'))
                 {
                     std::stringstream ss(line);
+                    float value[2];
+                    for (int i=0; i<2; i++)
+                    {
+                        ss >> value[i];
+                        ss.ignore();
+                    }
+                    machycore::trajectory->push_back( new machycore::Data( value ));
+                    float value_vir[3];
+                    for (int i=0; i<2; i++)
+                    {
+                        ss >> value_vir[i];
+                        ss.ignore();
+                    }
+                    machycore::virposition->push_back( new machycore::Sim( value_vir ));
+                }
+            }
+            std::string response("OK\n");
+            return response;
+        }
+/* 
+        std::string service::trajectory_ProcessRequest(asio::streambuf& request)
+        {
+            // clear vector
+            machycore::virposition->clear();
+            std::istream is(&request);
+            std::string line;
+            while (is)
+            {
+                while(std::getline(is, line, '\n'))
+                {
+                    std::stringstream ss(line);
+                    float value[5];
                     for (int i=0; i<5; i++)
                     {
                         ss >> value[i];
@@ -150,8 +181,8 @@ namespace machyAPI
             }
             std::string response("OK\n");
             return response;
-        }
-
+        } */
+        
         void acceptor::InitAccept()
         {
             std::shared_ptr<asio::ip::tcp::socket> 
