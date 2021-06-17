@@ -19,12 +19,20 @@ const unsigned int DEFAULT_THREAD_POOL_SIZE = 2;
 
 using namespace boost;
 
+struct GLdata
+{
+    float x, y;
+    GLdata(float a[2]) : x(a[0]/10), y(a[1]/10)
+    {}
+};
+
 namespace machyAPI
 {
     /*
      * machytech API
      */
-     namespace machysockets_aSync
+
+    namespace machysockets_aSync
      {
         /*
          * machy asynchronous sockets

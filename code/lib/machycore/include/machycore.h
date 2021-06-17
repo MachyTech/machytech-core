@@ -18,10 +18,10 @@ namespace machycore
         Data(float a[2]) : x(a[0]/10), y(a[1]/10)
         {} 
     };
-    /*
+    /*  
      * data structure with x and y data accepted by the openGL context
      */
-    extern std::vector<Data*> *trajectory;
+    extern std::vector<Data> *trajectory;
 
     struct Sim{
         float x, y, t, v, theta;
@@ -32,6 +32,15 @@ namespace machycore
      * data structure with x and y data. Also it uses simulation
      * data available from the path trajectory.
      */
+    struct DataQueue
+    {
+        float* start_pointer;
+        long int size;
+    };
+
+    extern std::vector<DataQueue*> *trajectory_queue;
+    
+    
     struct Square
     {
         float x, y;

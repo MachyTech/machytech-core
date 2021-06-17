@@ -83,43 +83,27 @@ namespace machyscene
     void PlotData::print_buffer()
     {
         std::cout<<"printing buffer.... x, y\n";
-        for (int i=0; i<((*machycore::trajectory).size()-2800); i++)
+        for (int i=0; i<machycore::trajectory->size(); i++)
         {
-            std::cout<<i<<" "<<&(*machycore::trajectory)[i]->x<<" "<<(*machycore::trajectory)[i]->x<<", "<<&(*machycore::trajectory)[i]->y<<", "<<(*machycore::trajectory)[i]->y<<std::endl;
+            std::cout<<i<<" "<<&machycore::trajectory->at(i).x<<", "<<machycore::trajectory->at(i).x<<", "<<&machycore::trajectory->at(i).y<<", "<<machycore::trajectory->at(i).y<<std::endl;
         }
     }
 
     void PlotData::bind_buffer()
     {
         std::cout<<"-------------------------------buffer---------------------------\n";
-        std::cout<<"array size : "<<(*machycore::trajectory).size()<<std::endl;
-        std::cout<<"array size in bytes : "<<(*machycore::trajectory).size()*sizeof((*machycore::trajectory))<<std::endl;
-        std::cout<<"pointer to first member of object : "<<&(*machycore::trajectory)[0]->x<<std::endl;
-        std::cout<<"pointer to first object : "<<&(*machycore::trajectory)[0]<<std::endl;
-        std::cout<<"byte size of array entry : "<<sizeof((*machycore::trajectory))<<std::endl;
-        std::cout<<"byte size of local array entry : "<<sizeof(machycore::trajectory)<<std::endl;
-        std::cout<<"byte size of first object : "<<sizeof((*machycore::trajectory)[0])<<std::endl;
-
-        glBufferData(GL_ARRAY_BUFFER, (*machycore::trajectory).size()-1, &(*machycore::trajectory)[0]->x, GL_STATIC_DRAW);
+        std::cout<<"array size : "<<machycore::trajectory->size()<<std::endl;
+        std::cout<<"array size in bytes : "<<machycore::trajectory->size()*sizeof(machycore::trajectory)<<std::endl;
+        std::cout<<"pointer to first object : "<<machycore::trajectory->data()<<std::endl;
+        std::cout<<"byte size of array entry : "<<sizeof(machycore::trajectory)<<std::endl;
+        std::cout<<"byte size of first object : "<<sizeof(machycore::trajectory->at(0))<<std::endl;
+        std::cout<<"-----------------------------------------------------------------\n";
+        glBufferData(GL_ARRAY_BUFFER, machycore::trajectory->size()*sizeof(machycore::trajectory), machycore::trajectory->data(), GL_STATIC_DRAW);
         //glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, (*machycore::trajectory).size()*sizeof((*machycore::trajectory)), &(*machycore::trajectory)[0]->x);
-        glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, 2*sizeof((*machycore::trajectory)[0]), NULL);
+        glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(machycore::trajectory), NULL);
         glEnableVertexAttribArray(vpos_location);
     }
 
-/*     void PlotData::bind_buffer()
-    {
-        std::cout<<"-------------------------------buffer---------------------------\n";
-        std::cout<<"array size of virtual position : "<<(*machycore::virposition).size()<<std::endl;
-        std::cout<<"byte size of virtual position : "<<(*machycore::virposition).size()*sizeof((*machycore::virposition))<<std::endl;
-        std::cout<<"pointer to first object : "<<&(*machycore::virposition)[0]<<std::endl;
-        std::cout<<"byte size of array : "<<sizeof((*machycore::virposition))<<std::endl;
-        std::cout<<"byte size of local array : "<<sizeof(machycore::virposition)<<std::endl;
-        std::cout<<"byte size of first object : "<<sizeof((*machycore::virposition)[0]->x)<<std::endl;
-        glBufferData(GL_ARRAY_BUFFER, (*machycore::virposition).size()*sizeof((*machycore::virposition)), NULL, GL_STATIC_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, (*machycore::virposition).size()*sizeof((*machycore::virposition)), &(*machycore::virposition)[0]);
-        glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof((*machycore::virposition)[0]), NULL);
-        glEnableVertexAttribArray(vpos_location);
-    } */
     void PlotData::render(GLFWwindow* win)
     {
         const GLfloat color[] = { 1.0f, 1.0f, 1.0f, 1.0f };

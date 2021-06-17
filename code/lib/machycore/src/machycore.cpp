@@ -2,7 +2,7 @@
 
 namespace machycore
 {
-    std::vector<Data*> *trajectory =  new std::vector<Data*>;    
+    std::vector<Data> *trajectory = new std::vector<Data>;    
     /* 
      * position vector pointer
      */
@@ -10,11 +10,15 @@ namespace machycore
     /*
      * virtual position pointer
      */
+    std::vector<DataQueue*> *trajectory_queue = new std::vector<DataQueue*>;
+    /*
+     * queue with trajectories
+     */
     void print_pos_data()
     {
         std::cout<<"x, y\n";
         for (const auto &arr: *trajectory){
-            std::cout<< arr->x<< ", " << arr->y <<std::endl;
+            std::cout<< arr.x<< ", " << arr.y <<std::endl;
         }
     }
 

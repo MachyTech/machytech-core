@@ -93,7 +93,7 @@ namespace machyscene
                 glGenBuffers(1, &buffer);
                 glBindBuffer(GL_ARRAY_BUFFER, buffer);
                 print_buffer();
-                n_points = (*machycore::trajectory).size();
+                n_points = machycore::trajectory->size();
                 bind_buffer();
                 //machycore::trajectory->clear();
                 //print_buffer();

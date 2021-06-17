@@ -131,7 +131,6 @@ namespace machyAPI
         std::string service::trajectory_ProcessRequest(asio::streambuf& request)
         {
             // clear vector
-            machycore::virposition->clear();
             std::istream is(&request);
             std::string line;
             while (is)
@@ -145,19 +144,20 @@ namespace machyAPI
                         ss >> value[i];
                         ss.ignore();
                     }
-                    machycore::trajectory->push_back( new machycore::Data( value ));
-                    float value_vir[3];
+                    machycore::trajectory->push_back( value );
+/*                     float value_vir[3];
                     for (int i=0; i<2; i++)
                     {
                         ss >> value_vir[i];
                         ss.ignore();
                     }
-                    machycore::virposition->push_back( new machycore::Sim( value_vir ));
+                    machycore::virposition->push_back( new machycore::Sim( value_vir )); */
                 }
             }
             std::string response("OK\n");
             return response;
         }
+
 /* 
         std::string service::trajectory_ProcessRequest(asio::streambuf& request)
         {
