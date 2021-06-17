@@ -70,9 +70,9 @@ docker run -it --mount type=bind,source=<path-to-source>,target=/home <name> /bi
 ```
 
 ## new features
-* MachyAPI (14/06/2021)
+* MachyAPI (17/06/2021)
 minimum working version of the machyAPI.
-    * tcp trajectory server
+    * tcp trajectory server (array with x,y,t,v,theta) port:3333
 * Vertical window (29/05/2021)
 * White background (29/05/2021)
 * ARMv7 build image (05/05/2021)
