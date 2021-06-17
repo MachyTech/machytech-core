@@ -10,7 +10,7 @@
 namespace machycore
 {
     /*
-     * machycore includes function that connect all the piecec
+     * machycore includes function that connect all the pieces
      * of software together
      */
     struct Data{
@@ -24,31 +24,15 @@ namespace machycore
     extern std::vector<Data> *trajectory;
 
     struct Sim{
-        float x, y, t, v, theta;
-        Sim(float a[5]) : x(a[0]/10), y(a[1]/10), t(a[2]), v(a[3]), theta(a[4])
+        float t, v, theta;
+        Sim(float a[3]) : t(a[0]), v(a[1]), theta(a[2]+1.57)
         {}
     };
     /*
      * data structure with x and y data. Also it uses simulation
      * data available from the path trajectory.
      */
-    struct DataQueue
-    {
-        float* start_pointer;
-        long int size;
-    };
-
-    extern std::vector<DataQueue*> *trajectory_queue;
-    
-    
-    struct Square
-    {
-        float x, y;
-    };
-    /*
-     * sample triangle
-     */
-    extern std::vector<Sim*> *virposition;
+    extern std::vector<Sim> *virposition;
     
     void print_pos_data();
     /*

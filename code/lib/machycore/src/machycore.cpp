@@ -6,13 +6,9 @@ namespace machycore
     /* 
      * position vector pointer
      */
-    std::vector<Sim*> *virposition = new std::vector<Sim*>;
+    std::vector<Sim> *virposition = new std::vector<Sim>;
     /*
      * virtual position pointer
-     */
-    std::vector<DataQueue*> *trajectory_queue = new std::vector<DataQueue*>;
-    /*
-     * queue with trajectories
      */
     void print_pos_data()
     {
@@ -26,7 +22,7 @@ namespace machycore
     {
         std::cout<<"t, v, theta"<<std::endl;
         for (const auto &arr: *virposition){
-            std::cout<<arr->t<<", "<<arr->v<<", "<<arr->theta<<std::endl;
+            std::cout<<arr.t<<", "<<arr.v<<", "<<arr.theta<<std::endl;
         }
     }
 

@@ -1,4 +1,6 @@
 #include "api.h"
+#include "http_async_api.h"
+//#define VIR_POSITION
 
 namespace machyAPI
 {
@@ -130,7 +132,6 @@ namespace machyAPI
 
         std::string service::trajectory_ProcessRequest(asio::streambuf& request)
         {
-            // clear vector
             std::istream is(&request);
             std::string line;
             while (is)
@@ -145,13 +146,15 @@ namespace machyAPI
                         ss.ignore();
                     }
                     machycore::trajectory->push_back( value );
-/*                     float value_vir[3];
-                    for (int i=0; i<2; i++)
+#ifdef VIR_POSITION
+                    float value_vir[3];
+                    for (int i=0; i<3; i++)
                     {
                         ss >> value_vir[i];
                         ss.ignore();
                     }
-                    machycore::virposition->push_back( new machycore::Sim( value_vir )); */
+                    machycore::virposition->push_back( value_vir );
+#endif
                 }
             }
             std::string response("OK\n");

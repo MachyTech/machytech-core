@@ -63,8 +63,8 @@ namespace machyscene
                 glBindBuffer(GL_ARRAY_BUFFER, buffer);
                 //machycore::print_vpos_data();
                 //print_buffer();
-                bind_buffer();
                 print_buffer();
+                bind_buffer();
             }
             void bind_buffer();
             void print_buffer();
@@ -108,11 +108,10 @@ namespace machyscene
             }
     };
 
-    class Triangle : public Scene
+/*     class Triangle : public Scene
     {
         private: 
             GLuint vertex_array_object, buffer;
-            std::vector<machycore::Square> square;
         public:
             Triangle ( GLuint a ) : Scene(a)
             {
@@ -129,7 +128,7 @@ namespace machyscene
                 glDeleteVertexArrays(1, &vertex_array_object);
                 glDeleteProgram(program);
             }
-    };
+    }; */
 }
 
 #endif

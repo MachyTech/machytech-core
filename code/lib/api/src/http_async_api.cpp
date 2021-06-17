@@ -1,3 +1,4 @@
+#include "api.h"
 #include "http_async_api.h"
 
 namespace machyAPI
