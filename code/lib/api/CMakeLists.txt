@@ -22,24 +22,15 @@ endif()
 
 target_link_libraries(machyapi machycore ${Boost_LIBRARIES})
 
-# # use boost enhanced functions(?)
-# if(BOOST_ENHANCED)
-#   add_compile_definitions(BOOST_ENHANCED)
-# endif()
+# use boost enhanced functions(?)
+if(BOOST_ENHANCED)
+   add_compile_definitions(BOOST_ENHANCED)
+endif()
 
-# # examples
-# if(BUILD_EXAMPLES)
-#   add_executable(sync_client "samples/sync_client.cpp" ${SOURCES} "")
-#   target_link_libraries(sync_client ${Boost_LIBRARIES})
-#   add_executable(sync_server "samples/sync_server.cpp" ${SOURCES})
-#   target_link_libraries(sync_server ${Boost_LIBRARIES})
-#   add_executable(async_client "samples/async_client.cpp" ${SOURCES})
-#   target_link_libraries(async_client ${Boost_LIBRARIES})
-#   add_executable(async_server "samples/async_server.cpp" ${SOURCES})
-#   target_link_libraries(async_server ${Boost_LIBRARIES})
-#   add_executable(async_httpserver "samples/async_httpserver.cpp" ${SOURCES})
-#   target_link_libraries(async_httpserver ${Boost_LIBRARIES})
-# endif()
+# use VIR POSITION
+if(VIR_POSITION)
+    add_compile_definitions(VIR_POSITION)
+endif()
 
 # ---------------------------------------------------------
 #   Install

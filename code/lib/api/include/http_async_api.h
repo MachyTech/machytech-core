@@ -14,8 +14,6 @@
 
 using namespace boost;
 
-const unsigned int DEFAULT_THREAD_POOL_SIZE = 2;
-
 namespace machyAPI
 {
     namespace machysockets_aSync

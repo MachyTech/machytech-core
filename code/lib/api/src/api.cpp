@@ -1,4 +1,6 @@
 #include "api.h"
+#include "http_async_api.h"
+//#define VIR_POSITION
 
 namespace machyAPI
 {
@@ -96,13 +98,12 @@ namespace machyAPI
                 onFinish();
                 return;
             }
-            trajectory_ProcessRequest(m_request);
+            m_response = trajectory_ProcessRequest(m_request);
             //machycore::print_vpos_data();
-            m_response = "OK\n";
             asio::async_write(*m_sock.get(), asio::buffer(m_response),
                     [this]( const boost::system::error_code& ec, std::size_t bytes_transferred)
                         { onResponseSend(ec, bytes_transferred);});
-        }
+        }   
 
         void service::onResponseSend(const boost::system::error_code& ec, std::size_t bytes_transferred)
         {
@@ -130,16 +131,70 @@ namespace machyAPI
 
         std::string service::trajectory_ProcessRequest(asio::streambuf& request)
         {
+            std::istream is(&request);
+            std::string request_line;
+            std::cout<<"recieved: ";
+            while (is)
+            {
+                std::getline(is, request_line, ':');
+                std::cout<<"recieved: "<<request_line<<std::endl;
+                if(request_line.compare(0,10,"TEST000001")==0)
+                {
+                    int i=0;
+                    std::cout<<"starting cpu process emulation\n";
+                    while (i != 100000)
+                        i++;
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                    std::cout<<"finished...\n";
+                }
+                if(request_line.compare(0, 9, "TRAJSIM001")==0){
+                    std::string line;
+                    while (is)
+                    {
+                        while(std::getline(is, line, '\n'))
+                        {
+                            std::stringstream ss(line);
+                            float value[2];
+                            for (int i=0; i<2; i++)
+                            {
+                                ss >> value[i];
+                                ss.ignore();
+                            }
+                            machycore::trajectory->push_back( value );
+        #ifdef VIR_POSITION
+                            float value_vir[3];
+                            for (int i=0; i<3; i++)
+                            {
+                                ss >> value_vir[i];
+                                ss.ignore();
+                            }
+                            machycore::virposition->push_back( value_vir );
+        #endif
+                        }
+                    }
+                }
+                else{
+                    std::string response("NOT RECOGNIZED\n");
+                    return response;
+                }
+            }
+            std::string response("OK\n");
+            return response;
+        }
+
+/* 
+        std::string service::trajectory_ProcessRequest(asio::streambuf& request)
+        {
             // clear vector
             machycore::virposition->clear();
             std::istream is(&request);
             std::string line;
-            float value[5];
             while (is)
             {
                 while(std::getline(is, line, '\n'))
                 {
                     std::stringstream ss(line);
+                    float value[5];
                     for (int i=0; i<5; i++)
                     {
                         ss >> value[i];
@@ -150,8 +205,8 @@ namespace machyAPI
             }
             std::string response("OK\n");
             return response;
-        }
-
+        } */
+        
         void acceptor::InitAccept()
         {
             std::shared_ptr<asio::ip::tcp::socket> 
