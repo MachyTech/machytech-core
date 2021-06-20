@@ -64,18 +64,30 @@ target_link_libraries(LibsModule machycore)
 #add_executable(app ${SOURCES})
 #target_link_libraries(app LibsModule)
 
-# samples
-add_executable(trajectorysim ${SOURCES} "samples/trajsim.cpp")
-target_link_libraries(trajectorysim LibsModule)
-add_executable(plotdata ${SOURCES} "samples/plotdata.cpp" )
-target_link_libraries(plotdata LibsModule)
+# examples
+if(BUILD_EXAMPLES)
+    add_executable(trajectorysim ${SOURCES} "samples/trajsim.cpp")
+    target_link_libraries(trajectorysim LibsModule)
+    add_executable(plotdata ${SOURCES} "samples/plotdata.cpp" )
+    target_link_libraries(plotdata LibsModule)
+#    add_executable(sync_client "samples/sync_client.cpp" ${SOURCES})
+#    target_link_libraries(sync_client machyapi ${Boost_LIBRARIES})
+#    add_executable(sync_server "samples/sync_server.cpp" ${SOURCES})
+#   target_link_libraries(sync_server machyapi ${Boost_LIBRARIES})
+#   add_executable(async_client "samples/async_client.cpp" ${SOURCES})
+#   target_link_libraries(async_client machyapi ${Boost_LIBRARIES})
+    add_executable(async_server "samples/async_server.cpp")
+    target_link_libraries(async_server machyapi ${Boost_LIBRARIES})
+#    add_executable(async_httpserver "samples/async_httpserver.cpp")
+#    target_link_libraries(async_httpserver machyapi ${Boost_LIBRARIES})
+endif()
 
-install(TARGETS trajectorysim
-    COMPONENT projectorapp
-    RUNTIME DESTINATION "/usr/bin"
-    LIBRARY DESTINATION "/usr/bin/"
-    DESTINATION "/usr/bin/"
-)
+# install(TARGETS trajectorysim
+#     COMPONENT projectorapp
+#     RUNTIME DESTINATION "/usr/bin"
+#     LIBRARY DESTINATION "/usr/bin/"
+#     DESTINATION "/usr/bin/"
+# )
 
 # # create .deb package
 # SET(CPACK_GENERATOR "DEB")

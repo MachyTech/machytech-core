@@ -10,38 +10,29 @@
 namespace machycore
 {
     /*
-     * machycore includes function that connect all the piecec
+     * machycore includes function that connect all the pieces
      * of software together
      */
     struct Data{
         float x, y;
-        Data(float a, float b) : x(a), y(b)
+        Data(float a[2]) : x(a[0]/10), y(a[1]/10)
         {} 
     };
-    /*
+    /*  
      * data structure with x and y data accepted by the openGL context
      */
-    extern std::vector<Data*> *position;
+    extern std::vector<Data> *trajectory;
 
     struct Sim{
-        float x, y, t, v, theta;
-        Sim(float a[5]) : x(a[0]),
-            y(a[1]), t(a[2]), v(a[3]), theta(a[4])
+        float t, v, theta;
+        Sim(float a[3]) : t(a[0]), v(a[1]), theta(a[2]+1.57)
         {}
     };
     /*
      * data structure with x and y data. Also it uses simulation
      * data available from the path trajectory.
      */
-    struct Square
-    {
-        float x, y;
-    };
-
-    /*
-     * sample triangle
-     */
-    extern std::vector<Sim*> *virposition;
+    extern std::vector<Sim> *virposition;
     
     void print_pos_data();
     /*
@@ -52,5 +43,6 @@ namespace machycore
      * overload function print virtual data structure
      * from machytech core
      */
+    void print_data_stats();
 }
 #endif
