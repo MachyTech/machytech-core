@@ -147,7 +147,7 @@ namespace machyAPI
                         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                     std::cout<<"finished...\n";
                 }
-                if(request_line.compare(0, 9, "TRAJSIM001")==0){
+                if(request_line.compare(0, 10, "TRAJSIM001")==0){
                     std::string line;
                     while (is)
                     {
@@ -172,10 +172,6 @@ namespace machyAPI
         #endif
                         }
                     }
-                }
-                else{
-                    std::string response("NOT RECOGNIZED\n");
-                    return response;
                 }
             }
             std::string response("OK\n");
