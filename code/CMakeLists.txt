@@ -82,12 +82,12 @@ if(BUILD_EXAMPLES)
 #    target_link_libraries(async_httpserver machyapi ${Boost_LIBRARIES})
 endif()
 
-install(TARGETS trajectorysim
-    COMPONENT projectorapp
-    RUNTIME DESTINATION "/usr/bin"
-    LIBRARY DESTINATION "/usr/bin/"
-    DESTINATION "/usr/bin/"
-)
+# install(TARGETS trajectorysim
+#     COMPONENT projectorapp
+#     RUNTIME DESTINATION "/usr/bin"
+#     LIBRARY DESTINATION "/usr/bin/"
+#     DESTINATION "/usr/bin/"
+# )
 
 # # create .deb package
 # SET(CPACK_GENERATOR "DEB")
