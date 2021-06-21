@@ -45,8 +45,8 @@ namespace machyscene
             trans = glm::rotate(trans, -(float)machycore::virposition->at(i).theta, 
                 glm::vec3(0.0f, 0.0f, 1.0f));
 
-            glm::vec2 offset = glm::vec2(machycore::trajectory->at(i).x, 
-                        machycore::trajectory->at(i).y);
+            glm::vec2 offset = glm::vec2(machycore::virposition->at(i).x, 
+                        machycore::virposition->at(i).y);
 
             glUniform2fv(off_location, 1, glm::value_ptr(offset));
             glUniformMatrix4fv(rot_location, 1, GL_FALSE, glm::value_ptr(trans));
@@ -75,7 +75,9 @@ namespace machyscene
     {
         std::cout<<"printing buffer... t, v, theta\n";
         for (int i=0; i<machycore::virposition->size(); i++){
-            std::cout<<i<<" "<<&machycore::virposition->at(i).t<<", "<<machycore::virposition->at(i).t
+            std::cout<<i<<" "<<&machycore::virposition->at(i).x<<", "<<machycore::virposition->at(i).x
+            <<", "<<&machycore::virposition->at(i).y<<", "<<machycore::virposition->at(i).y
+            <<", "<<&machycore::virposition->at(i).t<<", "<<machycore::virposition->at(i).t
             <<", "<<&machycore::virposition->at(i).v<<", "<<machycore::virposition->at(i).v
             <<", "<<&machycore::virposition->at(i).theta<<", "<<machycore::virposition->at(i).theta<<std::endl;
         }

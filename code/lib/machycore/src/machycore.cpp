@@ -20,9 +20,9 @@ namespace machycore
 
     void print_vpos_data()
     {
-        std::cout<<"t, v, theta"<<std::endl;
+        std::cout<<"x, y, t, v, theta"<<std::endl;
         for (const auto &arr: *virposition){
-            std::cout<<arr.t<<", "<<arr.v<<", "<<arr.theta<<std::endl;
+            std::cout<<arr.x<<", "<<arr.y<<", "<<arr.t<<", "<<arr.v<<", "<<arr.theta<<std::endl;
         }
     }
 

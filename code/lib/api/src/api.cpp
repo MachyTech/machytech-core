@@ -146,13 +146,13 @@ namespace machyAPI
                     while(std::getline(is, line, '\n'))
                     {
                         std::stringstream ss(line);
-                        float value_vir[3];
-                        for (int i=0; i<3; i++)
+                        float value_vir[5];
+                        for (int i=0; i<5; i++)
                         {
                             ss >> value_vir[i];
                             ss.ignore();
                         }
-                        machycore::trajectory->push_back( value_vir );
+                        machycore::virposition->push_back( value_vir );
                     }
                 }
                 std::string response("[VIRPOS0001] OK\n");
@@ -176,16 +176,18 @@ namespace machyAPI
                     {
                         std::stringstream ss(line);
                         float value[2];
+                        float value_vir[5];
                         for (int i=0; i<2; i++)
                         {
                             ss >> value[i];
                             ss.ignore();
                         }
                         machycore::trajectory->push_back( value );
-                        float value_vir[3];
+                        value_vir[0] = value[1];
+                        value_vir[1] = value[1];
                         for (int i=0; i<3; i++)
                         {
-                            ss >> value_vir[i];
+                            ss >> value_vir[i+2];
                             ss.ignore();
                         }
                         machycore::virposition->push_back( value_vir );
