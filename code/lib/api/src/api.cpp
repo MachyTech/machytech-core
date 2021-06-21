@@ -1,6 +1,5 @@
 #include "api.h"
 #include "http_async_api.h"
-//#define VIR_POSITION
 
 namespace machyAPI
 {
@@ -139,6 +138,27 @@ namespace machyAPI
                 return response;
             }
 
+            if(request_line.compare(0, 10, "VIRPOS0001")==0)
+            {
+                std::string line;
+                while(is)
+                {
+                    while(std::getline(is, line, '\n'))
+                    {
+                        std::stringstream ss(line);
+                        float value_vir[3];
+                        for (int i=0; i<3; i++)
+                        {
+                            ss >> value_vir[i];
+                            ss.ignore();
+                        }
+                        machycore::trajectory->push_back( value_vir );
+                    }
+                }
+                std::string response("[VIRPOS0001] OK\n");
+                return response;
+            }
+
             if(request_line.compare(0,10,"ECHO000001")==0)
             {
                 std::string line;
@@ -152,20 +172,7 @@ namespace machyAPI
                 std::string line;
                 while (is)
                 {
-<<<<<<< HEAD
                     while(std::getline(is, line, '\n'))
-=======
-                    int i=0;
-                    std::cout<<"starting cpu process emulation\n";
-                    while (i != 100000)
-                        i++;
-                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                    std::cout<<"finished...\n";
-                }
-                if(request_line.compare(0, 10, "TRAJSIM001")==0){
-                    std::string line;
-                    while (is)
->>>>>>> ed798b8f4f6534e7909e1965c9968dce70187501
                     {
                         std::stringstream ss(line);
                         float value[2];
@@ -184,11 +191,8 @@ namespace machyAPI
                         machycore::virposition->push_back( value_vir );
                     }
                 }
-<<<<<<< HEAD
                 std::string response("[TRAJSIM001] OK\n");
                 return response;
-=======
->>>>>>> ed798b8f4f6534e7909e1965c9968dce70187501
             }
 
             if(request_line.compare(0, 10, "TRAJSIM002")==0){
@@ -215,7 +219,7 @@ namespace machyAPI
                 std::string response("NOT RECOGNIZED\n");
                 return response;
             }
-            
+
             std::string response("NOT RECOGNIZED\n");
             return response;
         }
