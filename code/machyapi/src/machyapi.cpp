@@ -107,7 +107,7 @@ namespace machyAPI
             machysockets_aSync::aSyncTCPClient client;
             // concatenate strings
             // print_csv(virposition);
-            std::string trajectory_data ("");
+            std::string trajectory_data ("TRAJSIM001:");
             
             for (const auto &arr: virposition){
                 trajectory_data += std::to_string(arr.x)+","+std::to_string(arr.y)

@@ -17,6 +17,7 @@ namespace machyscene
         std::cout<<"byte size of array entry : "<<sizeof(machycore::trajectory)<<std::endl;
         std::cout<<"byte size of first object : "<<sizeof(machycore::trajectory->at(0))<<std::endl;
         std::cout<<"--------------------------------------------------------------------------\n";
+        
         glBufferData(GL_ARRAY_BUFFER, machycore::trajectory->size()*sizeof(machycore::trajectory), machycore::trajectory->data(), GL_STATIC_DRAW);
         //glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, (*machycore::trajectory).size()*sizeof((*machycore::trajectory)), &(*machycore::trajectory)[0]->x);
         glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(machycore::trajectory), NULL);
@@ -114,10 +115,7 @@ namespace machyscene
         glViewport(0, 0, width, height);
         glUseProgram(program);
         
-        //const auto &arr = *machycore::virposition;
-        //glm::vec2 offset = glm::vec2(arr[0]->x, arr[0]->y);
         glm::vec2 offset = glm::vec2(0.0 , 0.0);
-        //glm::vec2 offset = glm::vec2((*machycore::virposition)[0]->x, (*machycore::virposition)[0]->y);
         glUniform2fv(off_location, 1, glm::value_ptr(offset));
         glUniform1f(len_location, (GLfloat) 50/10);
         glDrawArrays(GL_LINE_STRIP, 0, n_points);

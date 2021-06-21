@@ -4,7 +4,7 @@ using namespace machyAPI;
 
 int main()
 {
-    int err = machysockets_aSync::asynchronous_server();
+    int err = machysockets_aSync::asynchronous_server("3333");
     if(err!=0)
     {
         std::cout<<"error in asynchronous server: "<<err<<std::endl;

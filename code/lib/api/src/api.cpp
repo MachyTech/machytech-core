@@ -84,7 +84,6 @@ namespace machyAPI
 
         void service::StartHandling()
         {
-            std::cout<<"start service\n";
             asio::async_read_until(*m_sock.get(), m_request, "\n\n", 
                 [this]( const boost::system::error_code& ec, std::size_t bytes_transferred)
                 {onRequestRecieved(ec, bytes_transferred);});
@@ -92,13 +91,12 @@ namespace machyAPI
 
         void service::onRequestRecieved(const boost::system::error_code& ec, std::size_t bytes_transferred )
         {
-            std::cout<<"request recieved!\n";
             if (ec != 0) {
                 std::cout<< "Error occured! Error code = "<<ec.value()<<". Message: "<<ec.message();
                 onFinish();
                 return;
             }
-            m_response = trajectory_ProcessRequest(m_request);
+            m_response = ProcessRequest(m_request);
             //machycore::print_vpos_data();
             asio::async_write(*m_sock.get(), asio::buffer(m_response),
                     [this]( const boost::system::error_code& ec, std::size_t bytes_transferred)
@@ -113,33 +111,50 @@ namespace machyAPI
             onFinish();
         }
 
-        std::string service::dummy_ProcessRequest(asio::streambuf& request)
-        {
-            int i=0;
-            std::ostringstream ss;
-            ss << &request;
-            std::string s = ss.str();
-            std::cout<<"recieved: "<<s<<std::endl;
-
-            std::cout<<"starting cpu process emulation\n";
-            while (i != 10000000)
-                i++;
-                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            std::cout<<"finished...\n";
-            return s;
-        }
-
-        std::string service::trajectory_ProcessRequest(asio::streambuf& request)
+        std::string service::ProcessRequest(asio::streambuf& request)
         {
             std::istream is(&request);
             std::string request_line;
-            std::cout<<"recieved: ";
-            while (is)
+
+            // state machine (use first ten characters finished with ":")
+
+            std::getline(is, request_line, ':');
+            std::cout<<"recieved: "<<request_line<<std::endl;
+
+            if(request_line.compare(0,10,"TEST000001")==0)
             {
-                std::getline(is, request_line, ':');
-                std::cout<<"recieved: "<<request_line<<std::endl;
-                if(request_line.compare(0,10,"TEST000001")==0)
+                _state_test001(10000);
+                std::string response("[TEST000001] OK\n");
+                return response;
+            }
+
+            if(request_line.compare(0, 10, "TEST000002")==0)
+            {
+                std::string line;
+                std::getline(is, line, '\n');
+                std::cout<<std::stoi(line)<<std::endl;
+                _state_test001(std::stoi(line));
+                std::string response("[TEST000002] CPULOAD ");
+                response+=line + ", OK\n";
+                return response;
+            }
+
+            if(request_line.compare(0,10,"ECHO000001")==0)
+            {
+                std::string line;
+                std::getline(is, line, '\n');
+                std::string response("[ECHO000001] ");
+                response += line+"\n";
+                return response;
+            }
+
+            if(request_line.compare(0, 10, "TRAJSIM001")==0){
+                std::string line;
+                while (is)
                 {
+<<<<<<< HEAD
+                    while(std::getline(is, line, '\n'))
+=======
                     int i=0;
                     std::cout<<"starting cpu process emulation\n";
                     while (i != 100000)
@@ -150,59 +165,71 @@ namespace machyAPI
                 if(request_line.compare(0, 10, "TRAJSIM001")==0){
                     std::string line;
                     while (is)
+>>>>>>> ed798b8f4f6534e7909e1965c9968dce70187501
                     {
-                        while(std::getline(is, line, '\n'))
+                        std::stringstream ss(line);
+                        float value[2];
+                        for (int i=0; i<2; i++)
                         {
-                            std::stringstream ss(line);
-                            float value[2];
-                            for (int i=0; i<2; i++)
-                            {
-                                ss >> value[i];
-                                ss.ignore();
-                            }
-                            machycore::trajectory->push_back( value );
-        #ifdef VIR_POSITION
-                            float value_vir[3];
-                            for (int i=0; i<3; i++)
-                            {
-                                ss >> value_vir[i];
-                                ss.ignore();
-                            }
-                            machycore::virposition->push_back( value_vir );
-        #endif
+                            ss >> value[i];
+                            ss.ignore();
                         }
+                        machycore::trajectory->push_back( value );
+                        float value_vir[3];
+                        for (int i=0; i<3; i++)
+                        {
+                            ss >> value_vir[i];
+                            ss.ignore();
+                        }
+                        machycore::virposition->push_back( value_vir );
                     }
                 }
+<<<<<<< HEAD
+                std::string response("[TRAJSIM001] OK\n");
+                return response;
+=======
+>>>>>>> ed798b8f4f6534e7909e1965c9968dce70187501
             }
-            std::string response("OK\n");
+
+            if(request_line.compare(0, 10, "TRAJSIM002")==0){
+                std::string line;
+                while(is)
+                {
+                    while(std::getline(is, line, '\n'))
+                    {
+                        std::stringstream ss(line);
+                        float value[2];
+                        for (int i=0; i<2; i++)
+                        {
+                            ss >> value[i];
+                            ss.ignore();
+                        }
+                        machycore::trajectory->push_back( value );
+                    }
+                }
+                std::string response("[TRAJSIM002] OK\n");
+                return response;
+            }
+
+            else{
+                std::string response("NOT RECOGNIZED\n");
+                return response;
+            }
+            
+            std::string response("NOT RECOGNIZED\n");
             return response;
         }
-
-/* 
-        std::string service::trajectory_ProcessRequest(asio::streambuf& request)
-        {
-            // clear vector
-            machycore::virposition->clear();
-            std::istream is(&request);
-            std::string line;
-            while (is)
-            {
-                while(std::getline(is, line, '\n'))
-                {
-                    std::stringstream ss(line);
-                    float value[5];
-                    for (int i=0; i<5; i++)
-                    {
-                        ss >> value[i];
-                        ss.ignore();
-                    }
-                    machycore::virposition->push_back( new machycore::Sim( value ));
-                }
-            }
-            std::string response("OK\n");
-            return response;
-        } */
         
+        void service::_state_test001(int cycles)
+        {
+            int i=0;
+            std::cout<<"starting cpu process emulation\n";
+            while (i != cycles)
+                i++;
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            std::cout<<"finished...\n";
+        }
+
         void acceptor::InitAccept()
         {
             std::shared_ptr<asio::ip::tcp::socket> 
@@ -233,7 +260,6 @@ namespace machyAPI
 
         void server::start(unsigned short port_num, unsigned int thread_pool_size)
         {
-            std::cout<<"start server\n";
             assert(thread_pool_size > 0);
             // create and start acceptor
             acc.reset(new acceptor(m_ios, port_num));
