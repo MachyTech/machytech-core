@@ -28,7 +28,7 @@ namespace machyscene
     {
         double_t t_last = 0.0;
         clock_t ct_last = clock();
-        for (int i=0; i<machycore::virposition->size(); i++)
+        for (int i=0; i<machycore::virposition->size()-1; i++)
         {
             double_t t_begin = machycore::virposition->at(i).t;
             clock_t ct_begin = clock();

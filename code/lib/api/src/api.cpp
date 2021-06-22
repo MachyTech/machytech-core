@@ -183,7 +183,7 @@ namespace machyAPI
                             ss.ignore();
                         }
                         machycore::trajectory->push_back( value );
-                        value_vir[0] = value[1];
+                        value_vir[0] = value[0];
                         value_vir[1] = value[1];
                         for (int i=0; i<3; i++)
                         {
@@ -214,6 +214,23 @@ namespace machyAPI
                     }
                 }
                 std::string response("[TRAJSIM002] OK\n");
+                return response;
+            }
+
+            if(request_line.compare(0, 10, "START00001")==0){
+                {
+                    std::lock_guard<std::mutex> lk(machycore::m_machydata);
+                    machycore::load_scene = true;
+                    machycore::render_ready.notify_one();
+                }
+
+                // wait for success message
+                {
+                    std::unique_lock<std::mutex> lk(machycore::m_machydata);
+                    machycore::render_ready.wait(lk, []{return machycore::scene_loaded;});
+                }
+
+                std::string response("[START00001] OK\n");
                 return response;
             }
 

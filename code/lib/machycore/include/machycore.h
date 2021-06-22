@@ -5,6 +5,11 @@
 #include <stdlib.h>
 #include <memory>
 #include <vector>
+
+#include <mutex>
+#include <thread>
+#include <condition_variable>
+
 #include <iostream>
 
 namespace machycore
@@ -34,6 +39,12 @@ namespace machycore
      */
     extern std::vector<Sim> *virposition;
     
+    // thread synchronization
+    extern std::mutex m_machydata;
+    extern std::condition_variable render_ready;
+    extern bool load_scene;
+    extern bool scene_loaded;
+
     void print_pos_data();
     /*
      * print data structures from machycore

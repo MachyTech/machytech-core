@@ -10,6 +10,12 @@ namespace machycore
     /*
      * virtual position pointer
      */
+
+    std::mutex m_machydata;
+    std::condition_variable render_ready;
+    bool load_scene = false;
+    bool scene_loaded = false;
+
     void print_pos_data()
     {
         std::cout<<"x, y\n";
