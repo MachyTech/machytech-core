@@ -1,4 +1,3 @@
-# NO MAIN program only samples (needs more testing & debugging)
 # CX Laser Projector
 
 core module used on the laserprojector of MachyTech. Superfast C++ API for rendering scenes in front of an autonomous robot.
@@ -13,6 +12,11 @@ cmake ../ && make -j4
 ```
 ./app
 ``` 
+### examples
+cmake build with examples
+```
+-D BUILD_EXAMPLES=ON
+```
 ### cmake
 I prefer using latest cmake
 ```
@@ -26,7 +30,7 @@ tar -zxvf cmake-3.20.1.tar.gz
 cmake .
 make
 make install
-
+```
 ### BOOST
 you need a very specific version of boost. BOOST 1.58.0
 ```
@@ -35,8 +39,6 @@ wget http://downloads.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.ta
 tar -zxvf boost_1_58_0.tar.gz
 ./bootstrap.sh
 ./b2 --with=all -j $cpuCores install
-```
-
 ```
 ### git submodules
 we are using glfw and glmath that you need to install as git submodules.
@@ -70,9 +72,14 @@ docker run -it --mount type=bind,source=<path-to-source>,target=/home <name> /bi
 ```
 
 ## new features
-* MachyAPI (17/06/2021)
+* MachyAPI (17/06/2021) port: 3333
 minimum working version of the machyAPI.
-    * tcp trajectory server (array with x,y,t,v,theta) port:3333
+    * ["TEST00001"] CPU load emulator (22/06/2021)
+    * ["TEST00002"] CPU load emulator accepts time as int (22/06/2021)
+    * ["ECHO000001"] echoes recieved message
+    * ["VIRPOS0001"] accepts virtual position data [x,y,t,v,theta] (22/06/2021)
+    * ["TRAJSIM001"] simulation mode; uses position and trajectory data [x,y,t,v,theta] (22/06/2021)
+    * ["TRAJSIM002"] accepts trajectory data [x,y] (22/06/2021)
 * Vertical window (29/05/2021)
 * White background (29/05/2021)
 * ARMv7 build image (05/05/2021)
