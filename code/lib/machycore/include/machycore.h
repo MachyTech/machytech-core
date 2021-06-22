@@ -5,6 +5,11 @@
 #include <stdlib.h>
 #include <memory>
 #include <vector>
+
+#include <mutex>
+#include <thread>
+#include <condition_variable>
+
 #include <iostream>
 
 namespace machycore
@@ -24,8 +29,8 @@ namespace machycore
     extern std::vector<Data> *trajectory;
 
     struct Sim{
-        float t, v, theta;
-        Sim(float a[3]) : t(a[0]), v(a[1]), theta(a[2]+1.57)
+        float x, y, t, v, theta;
+        Sim(float a[5]) : x(a[0]/10), y(a[1]/10), t(a[2]), v(a[3]), theta(a[4]+1.57)
         {}
     };
     /*
@@ -34,6 +39,12 @@ namespace machycore
      */
     extern std::vector<Sim> *virposition;
     
+    // thread synchronization
+    extern std::mutex m_machydata;
+    extern std::condition_variable render_ready;
+    extern bool load_scene;
+    extern bool scene_loaded;
+
     void print_pos_data();
     /*
      * print data structures from machycore

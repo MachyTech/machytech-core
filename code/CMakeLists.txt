@@ -40,7 +40,9 @@ include_directories(lib/machyscenes/include)
 include_directories(lib/machygl/include)
 
 # sources
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/glad.cpp"
+                "src/machygl.cpp"
+                "src/machyscene.cpp")
 
 # find curl
 # find_package( CURL REQUIRED )
@@ -61,8 +63,8 @@ target_link_libraries(LibsModule machycore)
 #target_link_libraries(LibsModule machygl)
 
 # create executable
-#add_executable(app ${SOURCES})
-#target_link_libraries(app LibsModule)
+add_executable(app ${SOURCES} "src/main.cpp")
+target_link_libraries(app LibsModule)
 
 # examples
 if(BUILD_EXAMPLES)

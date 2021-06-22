@@ -31,7 +31,6 @@ namespace machyAPI
     /*
      * machytech API
      */
-
     namespace machysockets_aSync
      {
         /*

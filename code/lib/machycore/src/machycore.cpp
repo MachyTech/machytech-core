@@ -10,6 +10,12 @@ namespace machycore
     /*
      * virtual position pointer
      */
+
+    std::mutex m_machydata;
+    std::condition_variable render_ready;
+    bool load_scene = false;
+    bool scene_loaded = false;
+
     void print_pos_data()
     {
         std::cout<<"x, y\n";
@@ -20,9 +26,9 @@ namespace machycore
 
     void print_vpos_data()
     {
-        std::cout<<"t, v, theta"<<std::endl;
+        std::cout<<"x, y, t, v, theta"<<std::endl;
         for (const auto &arr: *virposition){
-            std::cout<<arr.t<<", "<<arr.v<<", "<<arr.theta<<std::endl;
+            std::cout<<arr.x<<", "<<arr.y<<", "<<arr.t<<", "<<arr.v<<", "<<arr.theta<<std::endl;
         }
     }
 

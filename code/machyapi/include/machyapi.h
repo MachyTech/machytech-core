@@ -64,5 +64,6 @@ namespace machyAPI
      * connect to server in asynchronous manner and stream virtual position
      * data.
      */
+    int asynchronous_trajectory_client(std::vector<Sim> &virposition, std::vector<Data> &trajectory);
 }
 #endif

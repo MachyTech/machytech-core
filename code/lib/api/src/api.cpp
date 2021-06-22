@@ -1,6 +1,5 @@
 #include "api.h"
 #include "http_async_api.h"
-//#define VIR_POSITION
 
 namespace machyAPI
 {
@@ -139,6 +138,27 @@ namespace machyAPI
                 return response;
             }
 
+            if(request_line.compare(0, 10, "VIRPOS0001")==0)
+            {
+                std::string line;
+                while(is)
+                {
+                    while(std::getline(is, line, '\n'))
+                    {
+                        std::stringstream ss(line);
+                        float value_vir[5];
+                        for (int i=0; i<5; i++)
+                        {
+                            ss >> value_vir[i];
+                            ss.ignore();
+                        }
+                        machycore::virposition->push_back( value_vir );
+                    }
+                }
+                std::string response("[VIRPOS0001] OK\n");
+                return response;
+            }
+
             if(request_line.compare(0,10,"ECHO000001")==0)
             {
                 std::string line;
@@ -152,43 +172,29 @@ namespace machyAPI
                 std::string line;
                 while (is)
                 {
-<<<<<<< HEAD
                     while(std::getline(is, line, '\n'))
-=======
-                    int i=0;
-                    std::cout<<"starting cpu process emulation\n";
-                    while (i != 100000)
-                        i++;
-                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                    std::cout<<"finished...\n";
-                }
-                if(request_line.compare(0, 10, "TRAJSIM001")==0){
-                    std::string line;
-                    while (is)
->>>>>>> ed798b8f4f6534e7909e1965c9968dce70187501
                     {
                         std::stringstream ss(line);
                         float value[2];
+                        float value_vir[5];
                         for (int i=0; i<2; i++)
                         {
                             ss >> value[i];
                             ss.ignore();
                         }
                         machycore::trajectory->push_back( value );
-                        float value_vir[3];
+                        value_vir[0] = value[0];
+                        value_vir[1] = value[1];
                         for (int i=0; i<3; i++)
                         {
-                            ss >> value_vir[i];
+                            ss >> value_vir[i+2];
                             ss.ignore();
                         }
                         machycore::virposition->push_back( value_vir );
                     }
                 }
-<<<<<<< HEAD
                 std::string response("[TRAJSIM001] OK\n");
                 return response;
-=======
->>>>>>> ed798b8f4f6534e7909e1965c9968dce70187501
             }
 
             if(request_line.compare(0, 10, "TRAJSIM002")==0){
@@ -211,11 +217,28 @@ namespace machyAPI
                 return response;
             }
 
+            if(request_line.compare(0, 10, "START00001")==0){
+                {
+                    std::lock_guard<std::mutex> lk(machycore::m_machydata);
+                    machycore::load_scene = true;
+                    machycore::render_ready.notify_one();
+                }
+
+                // wait for success message
+                {
+                    std::unique_lock<std::mutex> lk(machycore::m_machydata);
+                    machycore::render_ready.wait(lk, []{return machycore::scene_loaded;});
+                }
+
+                std::string response("[START00001] OK\n");
+                return response;
+            }
+
             else{
                 std::string response("NOT RECOGNIZED\n");
                 return response;
             }
-            
+
             std::string response("NOT RECOGNIZED\n");
             return response;
         }

@@ -5,8 +5,8 @@ using namespace machyAPI;
 int main()
 {
     // new sim data instance
-    //std::shared_ptr<Sim> sim_data = std::shared_ptr<Sim>(new Sim());
     std::vector <Sim> sim_data;
+    
     read_csv("/home/timo/Projects/machytech/machytech-core/tests/trajectories/trajectory_100_fpg_out.txt",
         sim_data);
     int err = asynchronous_trajectory_client(sim_data);
