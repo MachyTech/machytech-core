@@ -25,12 +25,16 @@ int main()
 
     // create scene
     machyscene::Scene *scene;
-    machyscene::TrajectorySim robotpath(program);
-    scene = &robotpath;
-
+    // machyscene::TrajectorySim robotpath(program);
+    // scene = &robotpath;
+    
+    machyscene::Triangle visiondemo(program);
+    scene = &visiondemo;
+    
     // let api know we succesfully loaded the scene
     machycore::scene_loaded = true;
     lk.unlock();
+
     machycore::render_ready.notify_one();
 
     while(1){

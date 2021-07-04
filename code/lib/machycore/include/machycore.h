@@ -39,6 +39,17 @@ namespace machycore
      */
     extern std::vector<Sim> *virposition;
     
+    struct DgrTri{
+        float x, y;
+        float r, g, b;
+        DgrTri(float a[5]) : x(a[0]), y(a[1]), r(a[2]), g(a[3]), b(a[4])
+        {} 
+    };
+    /*
+     * data structure for general openGL data
+     */
+    extern std::vector<DgrTri> *dgrtri;
+
     // thread synchronization
     extern std::mutex m_machydata;
     extern std::condition_variable render_ready;

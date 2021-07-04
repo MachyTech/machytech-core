@@ -108,18 +108,31 @@ namespace machyscene
             }
     };
 
-/*     class Triangle : public Scene
+    class Triangle : public Scene
     {
         private: 
-            GLuint vertex_array_object, buffer;
+            GLuint vertex_array_object, buffer, vpos_location;
         public:
             Triangle ( GLuint a ) : Scene(a)
             {
+                /* initialize triangle data */
+                float vertices[5] = { -0.6f, -0.4f, 1.f, 0.f, 0.f };
+                machycore::dgrtri->push_back( vertices );
+                float vertices2[5] = { 0.6f, -0.4f, 0.f, 1.f, 0.f };
+                machycore::dgrtri->push_back( vertices2 );
+                float vertices3[5] = { 0.f, 0.6f, 0.f, 0.f, 1.f };
+                machycore::dgrtri->push_back( vertices3 );
+
                 glCreateVertexArrays(1, &vertex_array_object);
                 glBindVertexArray(vertex_array_object);
 
+                vpos_location = glGetAttribLocation(program, "position");
+
                 glGenBuffers(1, &buffer);
                 glBindBuffer(GL_ARRAY_BUFFER, buffer);
+
+                n_points = machycore::dgrtri->size();
+                bind_buffer();
             }
             void bind_buffer();
             void render(GLFWwindow* win);
@@ -128,7 +141,7 @@ namespace machyscene
                 glDeleteVertexArrays(1, &vertex_array_object);
                 glDeleteProgram(program);
             }
-    }; */
+    };
 }
 
 #endif

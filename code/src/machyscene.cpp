@@ -132,4 +132,33 @@ namespace machyscene
             exit(1);
         }
     }
+
+    void Triangle::bind_buffer()
+    {
+        glBufferData(GL_ARRAY_BUFFER, machycore::dgrtri->size()*sizeof(machycore::dgrtri), machycore::dgrtri->data(), GL_STATIC_DRAW);
+        //glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, (*machycore::trajectory).size()*sizeof((*machycore::trajectory)), &(*machycore::trajectory)[0]->x);
+        glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(machycore::dgrtri), NULL);
+        glEnableVertexAttribArray(vpos_location);
+    }
+    void Triangle::render(GLFWwindow* win)
+    {
+        const GLfloat color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        glClearBufferfv(GL_COLOR, 0, color);
+
+        int width, height;
+        glfwGetFramebufferSize(win, &width, &height);
+        glViewport(0, 0, width, height);
+        glUseProgram(program);
+
+        glDrawArrays(GL_LINE_STRIP, 0, n_points);
+        glLineWidth(5.0);
+
+        glEnable(GL_LINE_SMOOTH);
+
+        glfwSwapBuffers(win);
+        glfwPollEvents();
+        if (glfwWindowShouldClose(win)){
+            exit(1);
+        }
+    }
 }

@@ -10,6 +10,10 @@ namespace machycore
     /*
      * virtual position pointer
      */
+    std::vector<DgrTri> *dgrtri = new std::vector<DgrTri>;
+    /*
+     * danger triangle
+     */
 
     std::mutex m_machydata;
     std::condition_variable render_ready;
