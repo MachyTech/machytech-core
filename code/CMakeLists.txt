@@ -21,12 +21,12 @@ endif()
 if (NOT TARGET machycore)
     add_subdirectory(lib/machycore)
 endif()
-#if (NOT TARGET machygl)
-#    add_subdirectory(lib/machygl)
-#endif()
-#if (NOT TARGET machyscenes)
-#    add_subdirectory(lib/machyscenes)
-#endif()
+if (NOT TARGET machygl)
+    add_subdirectory(lib/machygl)
+endif()
+if (NOT TARGET machyscenes)
+    add_subdirectory(lib/machyscenes)
+endif()
 # include shaders
 file(COPY shader DESTINATION .)
 
@@ -36,13 +36,11 @@ file(COPY shader DESTINATION .)
 # header files
 include_directories(include)
 include_directories(vendor/glm)
-include_directories(lib/machyscenes/include)
-include_directories(lib/machygl/include)
+# include_directories(lib/machyscenes/include)
+# include_directories(lib/machygl/include)
 
 # sources
-file(GLOB SOURCES "src/glad.cpp"
-                "src/machygl.cpp"
-                "src/machyscene.cpp")
+file(GLOB SOURCES "src/glad.cpp")
 
 # find curl
 # find_package( CURL REQUIRED )
@@ -59,8 +57,8 @@ target_link_libraries(LibsModule glfw)
 # machytech
 target_link_libraries(LibsModule machyapi)
 target_link_libraries(LibsModule machycore)
-#target_link_libraries(LibsModule machyscenes)
-#target_link_libraries(LibsModule machygl)
+target_link_libraries(LibsModule machyscenes)
+target_link_libraries(LibsModule machygl)
 
 # create executable
 add_executable(app ${SOURCES} "src/main.cpp")

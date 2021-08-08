@@ -38,21 +38,15 @@ target_include_directories(machyscenes PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includ
 
 # header files
 include_directories(${CMAKE_SOURCE_DIR}/vendor/glm)
-#include_directories(${CMAKE_SOURCE_DIR}/lib/machycore/include)
-#include_directories(${CMAKE_SOURCE_DIR}/lib/machygl/include)
-#include_directories(${CMAKE_SOURCE_DIR}/lib/api/include)
+include_directories(${CMAKE_SOURCE_DIR}/lib/machycore/include)
+include_directories(${CMAKE_SOURCE_DIR}/lib/machygl/include)
+include_directories(${CMAKE_SOURCE_DIR}/lib/api/include)
 
-# sources
-# file(GLOB SOURCES "src/*.cpp")
-
-# boost
-# find_package( Boost 1.58 EXACT REQUIRED system )
-# include_directories(${Boost_INCLUDE_DIRS})
 if (NOT TARGET glfw)
     add_subdirectory(${CMAKE_SOURCE_DIR}/vendor/glfw vendor/glfw)
 endif()
 
-# # link libraries
+# link libraries
 target_link_libraries(machyscenes -lX11)
 # target_link_libraries(machyscenes -lpthread)
 target_link_libraries(machyscenes -lXrandr)
