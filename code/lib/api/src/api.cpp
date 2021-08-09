@@ -310,4 +310,77 @@ namespace machyAPI
             }
         }
     }
+#ifdef USE_CURL
+    void read_remote_csv(char* weburl, std::vector<Data> &position)
+    {
+        CURL *curl_handle;
+        CURLcode res;
+        std::string buffer;
+
+        curl_global_init(CURL_GLOBAL_ALL);
+        curl_handle = curl_easy_init();
+        if(curl_handle)
+        {
+            std::cout<<"using weburl: "<<weburl<<std::endl;
+            curl_easy_setopt(curl_handle, CURLOPT_URL, weburl);
+            curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteCallback);
+            curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &buffer);
+            res = curl_easy_perform(curl_handle);
+            std::stringstream ssline(buffer);
+            if(res != CURLE_OK){
+                fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+            }
+            else{
+                std::string line;
+                float value[7];
+                while(std::getline(ssline, line, '\n'))
+                {
+                    std::stringstream ss(line);
+                    ss >> value[0];
+                    ss.ignore();
+                    ss >> value[1];
+                    position.push_back({value[0], value[1]});
+                }
+            }
+        }
+    }
+
+
+    void read_remote_csv(char* weburl, std::vector<Sim> &virposition)
+    {
+        CURL *curl_handle;
+        CURLcode res;
+        std::string buffer;
+        
+        curl_global_init(CURL_GLOBAL_ALL);
+        curl_handle = curl_easy_init();
+        if(curl_handle)
+        {
+            std::cout<<"using weburl: "<<weburl<<std::endl;
+            curl_easy_setopt(curl_handle, CURLOPT_URL, weburl);
+            curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteCallback);
+            curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &buffer);
+            res = curl_easy_perform(curl_handle);
+            std::stringstream ssline(buffer);
+            if(res != CURLE_OK){
+                fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+                exit(-1);
+            }
+            else{
+                std::string line;
+                float value[7];
+                while(std::getline(ssline, line, '\n'))
+                {
+                    std::stringstream ss(line);
+                    for(int i=0; i<7; i++)
+                    {
+                        ss >> value[i];
+                        ss.ignore();
+                    }
+                    virposition.push_back({value[0], value[1], value[2], value[3], value[6]+1.57});
+                }
+            }
+        }
+    }
+#endif
 }
