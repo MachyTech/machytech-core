@@ -47,6 +47,7 @@ git submodule update --init --recursive
 ```
 
 ### build image
+<- only works in master branch ->
 If you dont want to actually build the image you can also pull the image from our machytech docker hub repository.
 ```
 docker run -it --mount type=bind,source=<path-to-target>,target=/home docker.io/machytech/armv7-build@sha256:f4f929ea0a0c451e0407b63fc2949cda6f3d335fc73c5068df483788b97f85f8 /bin/bash
