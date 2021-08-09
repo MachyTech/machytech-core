@@ -1,6 +1,6 @@
-# CX Laser Projector
+# machytech-core
 
-core module used on the laserprojector of MachyTech. Superfast C++ API for rendering scenes in front of an autonomous robot.
+machytech-core is a superfast C++ API for interacting with machytech-software.
 
 ## Getting started
 ```
