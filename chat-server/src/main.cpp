@@ -118,7 +118,7 @@ private:
         boost::asio::buffer(read_msg_.body(), chat_message::body_length),
         [this, self](boost::system::error_code ec, std::size_t /*length*/)
         {
-          if (!ec && read_msg_.decode_body())
+          if (!ec && read_msg_.decode_target())
           {
             //room_.deliver(read_msg_);
             std::cout.write(read_msg_.body(), chat_message::body_length);

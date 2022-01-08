@@ -6,9 +6,10 @@
 #include <cstring>
 #include <iostream>
 
-#define HTTP_CLIENT 0
-#define TCP_CLIENT 1
-#define UNDEFINED_CLIENT 2
+#define GUI_CLIENT 0
+#define VISION_CLIENT 1
+#define GRAPHIX_CLIENT 2
+#define UNDEFINED_CLIENT 3
 
 class chat_message
 {
@@ -16,6 +17,7 @@ class chat_message
         enum { header_length = 4 };
         enum { max_body_length = 512 };
         enum { body_length = 5 };
+        enum { target_length = 4 };
 
         chat_message() : body_length_(0)
         {}
@@ -28,6 +30,16 @@ class chat_message
         const int type() const
         {
             return type_;
+        }
+
+        const int target() const
+        {
+            return target_;
+        }
+
+        int target()
+        {
+            return target_;
         }
 
         int type()
@@ -63,20 +75,47 @@ class chat_message
             return true;
         }
 
+        bool decode_target()
+        {
+            char target[target_length+1] = "";
+            std::strncat(target, &  data_[header_length], target_length);
+            std::cout<<"target : "<< target <<std::endl;
+            if(std::strcmp(target, "MGUI")==0){    
+                std::cout<<"message for machygui\n";
+                // set the connection type
+                target_ = GUI_CLIENT;
+            }
+            if(std::strcmp(target,"MVIS")==0){
+                std::cout<<"message for machyvision\n";
+                // set the connection type
+                target_ = VISION_CLIENT;
+            }
+            if(std::strcmp(target, "MGRX")==0){
+                std::cout<<"message for machygraphix\n";
+                // set the connection type
+                target_ = GRAPHIX_CLIENT;
+            }
+        }
+
         bool decode_header()
         {
             char header[header_length + 1] = "";
             std::strncat(header, data_, header_length);
             std::cout<<"header : "<<header<<std::endl;
-            if(std::strcmp(header, "GET ")==0){    
-                std::cout<<"http mode\n";
-                // is this a websocket or normal GET request?
-                type_ = HTTP_CLIENT;
+            if(std::strcmp(header, "MGUI")==0){    
+                std::cout<<"message from gui\n";
+                // set the connection type
+                type_ = GUI_CLIENT;
             }
-            if(std::strcmp(header,"TCP ")==0){
-                std::cout<<"tcp mode\n";
-                // here we can also make more messages
-                type_ = TCP_CLIENT;
+            if(std::strcmp(header,"MVIS")==0){
+                std::cout<<"message from vision\n";
+                // set the connection type
+                type_ = VISION_CLIENT;
+            }
+            if(std::strcmp(header, "MGRX")==0){
+                std::cout<<"message from machygraphix\n";
+                // set the connection type
+                type_ = GRAPHIX_CLIENT;
             }
             else {type_= UNDEFINED_CLIENT;}
             return true;
@@ -92,6 +131,7 @@ class chat_message
     private:
         char data_[header_length + max_body_length];
         int type_;
+        int target_;
         std::size_t body_length_;
 };
 
