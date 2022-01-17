@@ -29,6 +29,16 @@ typedef std::shared_ptr<chat_participant> chat_participant_ptr;
 
 //----------------------------------------------------------------------
 
+void test_01()
+{
+  std::cout<<"machytech core: test\n";
+}
+
+void test_02()
+{
+  std::cout<<"machytech core: test 2\n";
+}
+
 class chat_room
 {
 public:
@@ -97,15 +107,43 @@ private:
   {
     auto self(shared_from_this());
     boost::asio::async_read(socket_,
-        boost::asio::buffer(read_msg_.data(), chat_message::header_length),
+        boost::asio::buffer(read_msg_.data(), chat_message::header_length+chat_message::target_length),
         [this, self](boost::system::error_code ec, std::size_t /*length*/)
         {
+          // this is actually the main function of machytech core (deliver message to clients)
           if (!ec && read_msg_.decode_header()){ 
-            std::cout<<read_msg_.type()<<std::endl;
             do_read_body();
           }
           else
           {
+            // let this client leave the room on wrong message format
+            room_.leave(shared_from_this());
+          }
+        });
+  }
+
+  void do_read_target()
+  {
+    auto self(shared_from_this());
+    boost::asio::async_read(socket_,
+        boost::asio::buffer(read_msg_.body(), chat_message::target_length),
+        [this, self](boost::system::error_code ec, std::size_t /*length*/)
+        {
+          if (!ec && read_msg_.decode_target())
+          {
+            // send message to all clients
+            //std::cout.write(read_msg_.body(), chat_message::body_length);
+            // check if message was intended for me
+            if (read_msg_.target()==MACHYTECHCORE)
+            {
+              std::cout<<"type: "<<read_msg_.type()<<std::endl;
+              std::cout<<"target: "<<read_msg_.target()<<std::endl;
+              do_read_body();
+            }
+          }
+          else
+          {
+            // let this client leave the room on wrong message format
             room_.leave(shared_from_this());
           }
         });
@@ -115,20 +153,21 @@ private:
   {
     auto self(shared_from_this());
     boost::asio::async_read(socket_,
-        boost::asio::buffer(read_msg_.body(), chat_message::body_length),
-        [this, self](boost::system::error_code ec, std::size_t /*length*/)
+      boost::asio::buffer(read_msg_.body(), chat_message::body_length),
+      [this, self](boost::system::error_code ec, std::size_t /*length*/)
+      {
+        if(!ec && read_msg_.decode_body())
         {
-          if (!ec && read_msg_.decode_target())
-          {
-            //room_.deliver(read_msg_);
-            std::cout.write(read_msg_.body(), chat_message::body_length);
-            //do_read_body();
-          }
-          else
-          {
-            room_.leave(shared_from_this());
-          }
-        });
+          std::cout<<"data : "<<read_msg_.data()<<std::endl;
+          room_.deliver(read_msg_);
+          //nothing
+        }
+        else
+        {
+          // let this client leave the room on wrong message format
+          room_.leave(shared_from_this());
+        }
+    });
   }
 
   void do_write()
@@ -194,7 +233,6 @@ private:
   tcp::acceptor acceptor_;
   chat_room room_;
 };
-
 //----------------------------------------------------------------------
 
 int main(int argc, char* argv[])
