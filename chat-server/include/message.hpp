@@ -6,9 +6,11 @@
 #include <cstring>
 #include <iostream>
 
-#define HTTP_CLIENT 0
-#define TCP_CLIENT 1
-#define UNDEFINED_CLIENT 2
+#define GUI_CLIENT 0
+#define VISION_CLIENT 1
+#define GRAPHIX_CLIENT 2
+#define UNDEFINED_CLIENT 3
+#define MACHYTECHCORE 4
 
 class chat_message
 {
@@ -16,6 +18,7 @@ class chat_message
         enum { header_length = 4 };
         enum { max_body_length = 512 };
         enum { body_length = 5 };
+        enum { target_length = 4 };
 
         chat_message() : body_length_(0)
         {}
@@ -30,6 +33,16 @@ class chat_message
             return type_;
         }
 
+        const int target() const
+        {
+            return target_;
+        }
+
+        int target()
+        {
+            return target_;
+        }
+
         int type()
         {
             return type_;
@@ -42,7 +55,7 @@ class chat_message
 
         std::size_t length() const
         {
-            return header_length + body_length_;
+            return header_length + target_length + body_length;
         }
 
         const char* body() const
@@ -52,33 +65,102 @@ class chat_message
 
         char *body()
         {
-            return data_ + header_length;
+            return data_ + header_length + target_length;
         }
 
         bool decode_body()
         {
-            char body[body_length] = "";
-            std::strncat(body, &data_[header_length], body_length);
+            char body[body_length+1] = "";
+            std::strncat(body, &data_[header_length+target_length], body_length);
             std::cout <<"body : "<< body << std::endl;
+            return true;
+        }
+
+        bool decode_target()
+        {
+            char target[target_length+1] = "";
+            std::strncat(target, &data_[header_length], target_length);
+            std::cout<<"target : "<< target <<std::endl;
+            if(std::strcmp(target, "MGUI")==0){    
+                std::cout<<"message for machygui\n";
+                // set the connection type
+                target_ = GUI_CLIENT;
+            }
+            if(std::strcmp(target,"MVIS")==0){
+                std::cout<<"message for machyvision\n";
+                // set the connection type
+                target_ = VISION_CLIENT;
+            }
+            if(std::strcmp(target, "MGRX")==0){
+                std::cout<<"message for machygraphix\n";
+                // set the connection type
+                target_ = GRAPHIX_CLIENT;
+            }
+            if(std::strcmp(target, "MCOR")==0){
+                std::cout<<"message for machycore\n";
+                // set the connection type
+                target_ = MACHYTECHCORE;
+            }
+            else {target_= UNDEFINED_CLIENT;}
             return true;
         }
 
         bool decode_header()
         {
             char header[header_length + 1] = "";
+            char target[target_length+1] = "";
             std::strncat(header, data_, header_length);
+            std::strncat(target, &data_[header_length], target_length);
             std::cout<<"header : "<<header<<std::endl;
-            if(std::strcmp(header, "GET ")==0){    
-                std::cout<<"http mode\n";
-                // is this a websocket or normal GET request?
-                type_ = HTTP_CLIENT;
+            std::cout<<"target : "<<target<<std::endl;
+
+            // some ugly if statements
+            if(std::strcmp(header, "MGUI")==0){    
+                std::cout<<"message from gui\n";
+                // set the connection type
+                type_ = GUI_CLIENT;
             }
-            if(std::strcmp(header,"TCP ")==0){
-                std::cout<<"tcp mode\n";
-                // here we can also make more messages
-                type_ = TCP_CLIENT;
+            if(std::strcmp(header,"MVIS")==0){
+                std::cout<<"message from vision\n";
+                // set the connection type
+                type_ = VISION_CLIENT;
             }
-            else {type_= UNDEFINED_CLIENT;}
+            if(std::strcmp(header, "MGRX")==0){
+                std::cout<<"message from machygraphix\n";
+                // set the connection type
+                type_ = GRAPHIX_CLIENT;
+            }
+            if(std::strcmp(header, "MCOR")==0){
+                std::cout<<"message from machycore\n";
+                // set the connection type
+                type_ = MACHYTECHCORE;
+            }
+
+            // some more terrible if statements
+            if(std::strcmp(target, "MGUI")==0){    
+                std::cout<<"message for machygui\n";
+                // set the connection type
+                target_ = GUI_CLIENT;
+            }
+            if(std::strcmp(target,"MVIS")==0){
+                std::cout<<"message for machyvision\n";
+                // set the connection type
+                target_ = VISION_CLIENT;
+            }
+            if(std::strcmp(target, "MGRX")==0){
+                std::cout<<"message for machygraphix\n";
+                // set the connection type
+                target_ = GRAPHIX_CLIENT;
+            }
+            if(std::strcmp(target, "MCOR")==0){
+                std::cout<<"message for machycore\n";
+                // set the connection type
+                target_ = MACHYTECHCORE;
+            }
+
+            else {
+                type_= UNDEFINED_CLIENT;
+                target_ = UNDEFINED_CLIENT;}
             return true;
         }
 
@@ -92,6 +174,7 @@ class chat_message
     private:
         char data_[header_length + max_body_length];
         int type_;
+        int target_;
         std::size_t body_length_;
 };
 
