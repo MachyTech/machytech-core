@@ -39,6 +39,11 @@ void test_02()
   std::cout<<"machytech core: test 2\n";
 }
 
+void machysocket()
+{
+  std::cout<<"machywebsocket is connected!"<<std::endl;
+}
+
 class chat_room
 {
 public:
@@ -135,7 +140,7 @@ private:
             //std::cout.write(read_msg_.body(), chat_message::body_length);
             // check if message was intended for me
             if (read_msg_.target()==MACHYTECHCORE)
-            {
+            { 
               std::cout<<"type: "<<read_msg_.type()<<std::endl;
               std::cout<<"target: "<<read_msg_.target()<<std::endl;
               do_read_body();
@@ -160,6 +165,13 @@ private:
         {
           std::cout<<"data : "<<read_msg_.data()<<std::endl;
           room_.deliver(read_msg_);
+          if(read_msg_.target()==MACHYTECHCORE)
+          {
+            if (std::strcmp(read_msg_.body(), "AAAAA")==0)
+            {
+              machysocket();
+            }
+          }
           //nothing
         }
         else
