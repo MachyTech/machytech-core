@@ -18,13 +18,13 @@ async def echo_handler(websocket):
     async for message in websocket:
         await websocket.send(message)
 
-# only build for one server
 async def vision_handler(websocket, port, dummy=None):
     connections[port].add(websocket)
     async for message in websocket:
         event = json.loads(message)
         x = event["x"]
         y = event["y"]
+        print(event)
         event = {
             "type": "tiangle",
             "x": x,
