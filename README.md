@@ -1,26 +1,43 @@
-# CX Laser Projector
+# robot-intention-feedback
 
-core module used on the laserprojector of MachyTech. Superfast C++ API for rendering scenes in front of an autonomous robot.
+Superfast C++ API for rendering scenes in an autonomous robot.
 
-## Getting started
-```
-mkdir build && cd build
-```
-```
-cmake ../ && make -j4
-```
-```
-./app
-``` 
+## git submodules
 
-### git submodules
 we are using glfw and glmath that you need to install as git submodules.
 ```
 git submodule update --init --recursive
 ```
 
-### build image
-If you dont want to actually build the image you can also pull the image from our machytech docker hub repository.
+## Quick Compile
+This was a group project. To get everyone up to speed as quickly as possible we needed a common build environment. In order to get started quickly with this project you need to install docker and execute the following.
+```
+docker build -t robot-intention-feedback .
+docker run -it --mount src="$(pwd)",target=/home/,type=bind robot-intention-feedback
+```
+Now in the container you can easily build the project
+```
+cd /home/code
+mkdir build && cd build
+cmake ../ && make -j4
+```
+If the build is succesfull stop the container and simulate the robot trajectory using python's build in http server. I am using libcurl on the client side to receive the trajectory data.
+```
+cd tests/trajectories
+python3 -m http.server
+```
+
+```
+./app
+``` 
+
+You should now see a window with an OpenGL context displaying the trajectory simulation.
+
+![trajectory simulation](results/trajectory.png)
+
+## ARM cross-compiling
+
+If you want to build the image for an ARM platform you can also pull the image from our machytech docker hub repository.
 ```
 docker run -it --mount type=bind,source=<path-to-target>,target=/home docker.io/machytech/armv7-build@sha256:f4f929ea0a0c451e0407b63fc2949cda6f3d335fc73c5068df483788b97f85f8 /bin/bash
 ```
@@ -43,8 +60,25 @@ Now copy the name from the armv7 image and run the container with a bash instanc
 ```
 docker run -it --mount type=bind,source=<path-to-source>,target=/home <name> /bin/bash
 ```
+## Linux Environment Variables
 
-## new features
+```
+GLSL_APP_VERT shader/basic.frag #vertex shader directory
+GLSL_APP_FRAG shader/basic.vert #fragment shader directory
+SCENE robotpath #used scene
+TCP_IP 127.0.0.1#tcp ip address
+TCP_PORT 3000 # tcp port address
+HTTP_IP 127.0.0.1 # http ip address
+HTTP_PORT 3015 # http port address
+HTTP_ROUTE /default # http route
+CURL_WEBURL http://0.0.0.0:8000/trajectory_100_fpg_out.txt # web url to data file (for robot path)
+SAMPLE_SIZE 5 # number of sample used from robot path
+LINEWIDTH 10 # width of line
+WINDOW_WIDTH 640 # width of openGL rendering context
+WINDOW_HEIGHT 360 # height of openGL rendering context
+```
+
+## latest features
 * Vertical window (29/05/2021)
 * White background (29/05/2021)
 * ARMv7 build image (05/05/2021)
@@ -62,25 +96,6 @@ This feature includes code for the rendering of the csv file in openGL.
 * libcurl file reader from http server
 
 Reading remote csv files FAST!! using libcurl. 
-
-* Linux environment variables
-
-Change often used variables without having to recompile. Simpy export the variable to your current linux proccess. Currently supported for:
-```
-GLSL_APP_VERT #vertex shader directory
-GLSL_APP_FRAG #fragment shader directory
-SCENE #used scene
-TCP_IP #tcp ip address
-TCP_PORT # tcp port address
-HTTP_IP # http ip address
-HTTP_PORT # http port address
-HTTP_ROUTE # http route
-CURL_WEBURL # web url to data file (for robot path)
-SAMPLE_SIZE # number of sample used from robot path
-LINEWIDTH # width of line
-WINDOW_WIDTH # width of openGL rendering context
-WINDOW_HEIGHT # height of openGL rendering context
-```
 
 * systemD service
 

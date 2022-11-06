@@ -1,6 +1,6 @@
 #version 450 core
 
-attribute vec2 position;
+in vec2 position;
 
 uniform mat4 ROT;
 uniform float LEN;

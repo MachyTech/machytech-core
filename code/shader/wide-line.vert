@@ -1,8 +1,8 @@
 #version 450 core
 
-attribute vec2 position;
+in vec2 position;
 
-unifrom mat4 ROT;
+uniform mat4 ROT;
 
 uniform vec2 OFF;
 void main(void)
